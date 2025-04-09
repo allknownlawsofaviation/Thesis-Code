@@ -4,10 +4,44 @@ import re
 import csv
 import json
 
-
+vuln_types = [
+    "status code", #eg 404 203 etc
+    "incorrect function calls",
+    "cross-site scripting",
+    "xss",
+    "iteratior-invalidation",
+    "double-eviction",
+    "insufficient data validation",
+    "incorrect security ui",
+    "use-after-free",
+    "use after free",
+    "buffer overflow",
+    "out-of-bounds read",
+    "out-of-bounds write",
+    "double free",
+    "memory leak",
+    "race condition",
+    "null pointer dereference",
+    "integer overflow",
+    "stack overflow",
+    "heap overflow",
+    "code execution",
+    "privilege escalation",
+    "denial of service",
+    "unspecified vectors",
+    "internal bug",
+    "out of bounds memory read",
+    "out of bounds memory write",
+    "out of bounds memory access",
+    "exploit heap corruption",
+    "insufficient policy enforcement",
+    "incorrect handling of confusable characters",
+    "incorrect handling of confusable character"
+]
 file = pandas.read_csv("all_c_cpp_release2.0.csv")
 
 commit_links = file.ref_link
+summaries = file.summary
 changes = file.files_changed
 GITHUB_TOKEN = "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"
 
@@ -38,8 +72,8 @@ def get_diff(commit_url):
     try:
         response = requests.get(patch_url, headers=headers)
         diff_content = response.text
-        sequences = extract_lines(diff_content)
-        return sequences
+        added,removed = extract_lines(diff_content)
+        return added,removed
 
 
     except requests.RequestException as e:
@@ -53,7 +87,8 @@ def get_diff(commit_url):
 # Exracts lines of code 
 def extract_lines(response):
     current_file =None
-    unsafe_operations = []
+    added_lines = []
+    removed_lines =[]
 
     for line in response.split("\n"):
         match = re.match(r"^diff --git a/(.+) b/\1", line)
@@ -61,52 +96,69 @@ def extract_lines(response):
             current_file = match.group(1)
             continue
         if current_file and re.search(r"README(\.\w+)?$", current_file, re.IGNORECASE):
-            continue
+             continue
 
         if line.startswith("---"):
             pass
         elif line.startswith("+"): #removed lines
             clean_line = clean_code_line(response,line[1:].strip())
             if clean_line:
-                unsafe_operations.append(clean_line)
-
-    return unsafe_operations
+                added_lines.append(clean_line)
+        elif line.startswith("-"):
+            clean_line = clean_code_line(response, line[1:].strip())
+            if clean_line:
+                removed_lines.append(clean_line)
+    return added_lines, removed_lines
 
 
 inc = 0
-def save_to_csv(filename):
-    inc = 0
-    with open(filename, "w", newline="") as file:
-        writer = csv.writer(file)
-        for commit in commit_links:
-            inc += 1
-            diff= get_diff(commit)
-            sequences = extract_lines(diff)
-            writer.writerow(sequences)
-            print(f"{inc} is added")
+
+
 
 def save_to_json(filename):
     inc = 0
     with open(filename,"w") as file:
+
         for commit in commit_links:
             inc += 1
-            diff = get_diff(commit)
-            if not diff:
+            added,removed = get_diff(commit)
+            data ={
+                "added_lines": added,
+                "removed_lines": removed
+            }
+            if not data:
                 pass
                 print(f"{inc} is not added")
             else:
-                json.dump(diff, file, indent =4)
+                json.dump(data, file, indent =4)
                 print(f"{inc} is added")
-#save_to_csv("unsafe.csv")
-save_to_json("safe.json")
-#inc = 0
-#for commit in commit_links:
- #   inc += 1
-  #  diff = get_diff(commit)
-   # print(inc)
 
-   #print(extract_lines(diff))
 
+def extract_vuln_type(summary, known_types):
+    try:
+        summary = summary.lower()  # Normalize casing
+        matched = []
+        for vuln_type in known_types:
+            if vuln_type in summary:
+                matched.append(vuln_type)
+        return matched if matched else ["unknown"]
+    except AttributeError:
+        return ["none"]
+count =1
+#save_to_json("changes.json")
+for summary in summaries:
+    unknown = []
+    type = extract_vuln_type(summary,vuln_types)
+    if type == ["unknown"]:
+        print(count)
+        count +=1
+        print(type)
+        print(f"{summary}\n")
+        unknown += summary
+
+
+    else:
+        continue
 
 
 
