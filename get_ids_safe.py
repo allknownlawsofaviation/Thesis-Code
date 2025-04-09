@@ -30,13 +30,15 @@ vuln_types = [
     "denial of service",
     "unspecified vectors",
     "internal bug",
+    "early free",
     "out of bounds memory read",
     "out of bounds memory write",
     "out of bounds memory access",
     "exploit heap corruption",
     "insufficient policy enforcement",
     "incorrect handling of confusable characters",
-    "incorrect handling of confusable character"
+    "incorrect handling of confusable character",
+    "incorrect handling of negative zero"
 ]
 file = pandas.read_csv("all_c_cpp_release2.0.csv")
 
@@ -150,8 +152,8 @@ for summary in summaries:
     unknown = []
     type = extract_vuln_type(summary,vuln_types)
     if type == ["unknown"]:
+        count += 1
         print(count)
-        count +=1
         print(type)
         print(f"{summary}\n")
         unknown += summary
