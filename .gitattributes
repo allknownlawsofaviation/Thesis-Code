@@ -1,0 +1,2 @@
+logs.psd filter=lfs diff=lfs merge=lfs -text
+tags filter=lfs diff=lfs merge=lfs -text
