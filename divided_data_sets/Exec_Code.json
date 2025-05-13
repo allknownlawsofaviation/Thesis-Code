@@ -1,0 +1,4305 @@
+[
+  {
+    "index": 1,
+    "id": "CVE-2010-2809",
+    "commit_id": "9cc39cb5c9396be013b5dc2ba7e4b3eaa647e975",
+    "added_lines": [
+      "@bind  <Button2>  = sh 'if [ \"$8\" ]; then uzbl-browser -u \"$8\"; else echo \"uri $(xclip -o | sed s/\\\\\\@/%40/g)\" > $4; fi' \\@SELECTED_URI"
+    ],
+    "removed_lines": [
+      "@bind  <Button2>  = sh 'if [ \"\\@SELECTED_URI\" ]; then uzbl-browser -u \"\\@SELECTED_URI\"; else echo \"uri $(xclip -o | sed s/\\\\\\@/%40/g)\" > $4; fi'"
+    ],
+    "cause": [
+      "Uncategorized Cluster 9"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "does not properly use the @SELECTED_URI feature"
+    ]
+  },
+  {
+    "index": 2,
+    "id": "CVE-2010-2060",
+    "commit_id": "2e8e8c6387ecdf5923dfc4d7718d18eba1b0873d",
+    "added_lines": [
+      "JOB_TOO_BIG"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "NO_OP"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "job that is too big"
+    ]
+  },
+  {
+    "index": 5,
+    "id": "CVE-2010-0011",
+    "commit_id": "1958b52d41cba96956dc1995660de49525ed1047",
+    "added_lines": [],
+    "removed_lines": [
+      "JSStringRef var_name",
+      "var_name = JSStringCreateWithUTF8CString(\"Uzbl\"",
+      "JSObjectSetProperty(context, globalobject, var_name,",
+      "JSObjectMake(context, uzbl.js.classref, NULL),",
+      "kJSClassAttributeNone, NULL",
+      "JSObjectDeleteProperty(context, globalobject, var_name, NULL",
+      "JSStringRelease(var_name"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [],
+    "unsafe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "exposes the run method"
+    ]
+  },
+  {
+    "index": 426,
+    "id": "CVE-2014-2208",
+    "commit_id": "506a44194a9016406c752ad8e010c01aeffc18cc",
+    "added_lines": [
+      "static void lwp_write(FILE *fout, const std::string &buf)",
+      "size_t len = buf.length",
+      "fwrite(&len, sizeof(len), 1, fout",
+      "fwrite(buf.c_str(), sizeof(buf[0]), len, fout",
+      "fflush(fout",
+      "static void lwp_write_int32(FILE *fout, int32_t d)",
+      "fwrite(&d, sizeof(d), 1, fout",
+      "fflush(fout",
+      "static void lwp_write_int64(FILE *fout, int64_t d)",
+      "fwrite(&d, sizeof(d), 1, fout",
+      "fflush(fout",
+      "static void lwp_read(FILE *fin, std::string &buf)",
+      "size_t len",
+      "fread(&len, sizeof(len), 1, fin",
+      "char *buffer = (char *)malloc(len + 1",
+      "fread(buffer, sizeof(*buffer), len, fin",
+      "buffer[len] = '\\0'",
+      "buf = std::string(buffer",
+      "free(buffer",
+      "static void lwp_read_int32(FILE *fin, int32_t &d)",
+      "fread(&d, sizeof(d), 1, fin",
+      "static void lwp_read_int64(FILE *fin, int64_t &d)",
+      "fread(&d, sizeof(d), 1, fin",
+      "std::string buf",
+      "std::string cwd",
+      "lwp_read(fin, buf",
+      "lwp_read(fin, buf",
+      "lwp_read(fin, cwd",
+      "if (chdir(cwd.c_str()))",
+      "Logger::Warning(\"Light Process failed chdir to %s.\", cwd.c_str",
+      "FILE *f = buf[0] ? ::popen(buf.c_str(), read_only ? \"r\" : \"w\") : nullptr",
+      "lwp_write(fout, \"error\"",
+      "lwp_write(fout, \"success\"",
+      "lwp_write_int64(fout, (int64_t)f",
+      "lwp_read_int64(fin, fptr",
+      "lwp_write_int32(fout, ret",
+      "lwp_write_int32(fout, errno",
+      "std::string cmd",
+      "lwp_read(fin, cmd",
+      "std::string cwd",
+      "lwp_read(fin, cwd",
+      "std::string buf",
+      "lwp_read_int32(fin, env_size",
+      "lwp_read(fin, buf",
+      "lwp_read_int32(fin, pipe_size",
+      "lwp_read_int32(fin, fd_value",
+      "lwp_write(fout, \"error\"",
+      "lwp_write_int32(fout, EPROTO",
+      "if (cmd.length() == 0)",
+      "lwp_write(fout, \"error\"",
+      "lwp_write_int32(fout, ENOENT",
+      "return",
+      "if (cwd.length() > 0 && chdir(cwd.c_str()))",
+      "execle(\"/bin/sh\", \"sh\", \"-c\", cmd.c_str(), nullptr, envp",
+      "execl(\"/bin/sh\", \"sh\", \"-c\", cmd.c_str(), nullptr",
+      "lwp_write(fout, \"success\"",
+      "lwp_write_int64(fout, (int64_t)child",
+      "lwp_write(fout, \"error\"",
+      "lwp_write_int32(fout, errno",
+      "lwp_read_int64(fin, p",
+      "lwp_read_int32(fin, options",
+      "lwp_read_int32(fin, timeout",
+      "lwp_write_int64(fout, ret",
+      "lwp_write_int32(fout, stat",
+      "lwp_write_int32(fout, errno",
+      "std::string uname",
+      "lwp_read(fin, uname",
+      "if (uname.length() > 0)",
+      "struct passwd *pw = getpwnam(uname.c_str",
+      "lwp_write(m_fout, \"exit\"",
+      "std::string buf",
+      "lwp_read(fin, buf",
+      "if (buf == \"exit\")",
+      "} else if (buf == \"popen\")",
+      "} else if (buf == \"pclose\")",
+      "} else if (buf == \"proc_open\")",
+      "} else if (buf == \"waitpid\")",
+      "} else if (buf == \"change_user\")",
+      "Logger::Info(\"LightProcess got invalid command: %.20s\", buf.c_str",
+      "FILE *fout = g_procs[id].m_fout",
+      "lwp_write(fout, \"popen\"",
+      "lwp_write(fout, type",
+      "lwp_write(fout, cmd",
+      "lwp_write(fout, cwd ? cwd : \"\"",
+      "fflush(fout",
+      "std::string buf",
+      "FILE *fin = g_procs[id].m_fin",
+      "lwp_read(fin, buf",
+      "if (buf == \"error\")",
+      "lwp_read_int64(fin, fptr",
+      "lwp_write(g_procs[id].m_fout, \"pclose\"",
+      "lwp_write_int64(g_procs[id].m_fout, f2",
+      "lwp_read_int32(g_procs[id].m_fin, ret",
+      "lwp_read_int32(g_procs[id].m_fin, errno",
+      "FILE *fout = g_procs[id].m_fout",
+      "lwp_write(fout, \"proc_open\"",
+      "lwp_write(fout, cmd",
+      "lwp_write(fout, cwd ? cwd : \"\"",
+      "lwp_write_int32(fout, (int)env.size",
+      "lwp_write(fout, env[i]",
+      "lwp_write_int32(fout, (int)created.size",
+      "lwp_write_int32(fout, desired[i]",
+      "fflush(fout",
+      "std::string buf",
+      "FILE *fin = g_procs[id].m_fin",
+      "lwp_read(fin, buf",
+      "if (buf == \"error\")",
+      "lwp_read_int32(fin, errno",
+      "always_assert(buf == \"success\"",
+      "lwp_read_int64(fin, pid",
+      "always_assert(pid",
+      "FILE *fout = g_procs[id].m_fout",
+      "lwp_write(fout, \"waitpid\"",
+      "lwp_write_int64(fout, (int64_t)pid",
+      "lwp_write_int32(fout, options",
+      "lwp_write_int32(fout, timeout",
+      "FILE *fin = g_procs[id].m_fin",
+      "lwp_read_int64(fin, ret",
+      "lwp_read_int32(fin, stat",
+      "lwp_read_int32(fin, errno",
+      "FILE *fout = g_procs[i].m_fout",
+      "lwp_write(fout, \"change_user\"",
+      "lwp_write(fout, username",
+      "fflush(fout"
+    ],
+    "removed_lines": [
+      "static const unsigned int BUFFER_SIZE = 4096",
+      "static void read_buf(FILE *fin, char *buf)",
+      "if (!fgets(buf, BUFFER_SIZE, fin))",
+      "buf[0] = '\\0'",
+      "return",
+      "buf[strlen(buf) - 1] = '\\0'",
+      "char buf[BUFFER_SIZE]",
+      "char cwd[BUFFER_SIZE]",
+      "if (!fgets(buf, BUFFER_SIZE, fin)) buf[0] = '\\0'",
+      "read_buf(fin, buf",
+      "read_buf(fin, cwd",
+      "if (chdir(cwd))",
+      "Logger::Warning(\"Light Process failed chdir to %s.\", cwd",
+      "FILE *f = buf[0] ? ::popen(buf, read_only ? \"r\" : \"w\") : nullptr",
+      "fprintf(fout, \"error\\n\"",
+      "fflush(fout",
+      "fprintf(fout, \"success\\n%\" PRId64 \"\\n\", (int64_t)f",
+      "fflush(fout",
+      "char buf[BUFFER_SIZE]",
+      "read_buf(fin, buf",
+      "sscanf(buf, \"%\" PRId64, &fptr",
+      "fprintf(fout, \"%d\\n\", ret",
+      "fprintf(fout, \"%d\\n\", errno",
+      "char cmd[BUFFER_SIZE]",
+      "read_buf(fin, cmd",
+      "if (strlen(cmd) == 0)",
+      "fprintf(fout, \"error\\n%d\\n\", ENOENT",
+      "fflush(fout",
+      "return",
+      "char cwd[BUFFER_SIZE]",
+      "read_buf(fin, cwd",
+      "char buf[BUFFER_SIZE]",
+      "read_buf(fin, buf",
+      "sscanf(buf, \"%d\", &env_size",
+      "read_buf(fin, buf",
+      "read_buf(fin, buf",
+      "sscanf(buf, \"%d\", &pipe_size",
+      "read_buf(fin, buf",
+      "sscanf(buf, \"%d\", &fd_value",
+      "fprintf(fout, \"error\\n%d\\n\", EPROTO",
+      "if (strlen(cwd) > 0 && chdir(cwd))",
+      "execle(\"/bin/sh\", \"sh\", \"-c\", cmd, nullptr, envp",
+      "execl(\"/bin/sh\", \"sh\", \"-c\", cmd, nullptr",
+      "fprintf(fout, \"%\" PRId64 \"\\n\", (int64_t)child",
+      "fprintf(fout, \"error\\n%d\\n\", errno",
+      "char buf[BUFFER_SIZE]",
+      "read_buf(fin, buf",
+      "sscanf(buf, \"%\" PRId64 \" %d %d\", &p, &options, &timeout",
+      "fprintf(fout, \"%\" PRId64 \" %d\\n\", (int64_t)ret, stat",
+      "fprintf(fout, \"%d\\n\", errno",
+      "char uname[BUFFER_SIZE]",
+      "read_buf(fin, uname",
+      "if (strlen(uname) > 0)",
+      "struct passwd *pw = getpwnam(uname",
+      "fprintf(m_fout, \"exit\\n\"",
+      "char buf[BUFFER_SIZE]",
+      "if (!fgets(buf, BUFFER_SIZE, fin)) buf[0] = '\\0'",
+      "if (strncmp(buf, \"exit\", 4) == 0)",
+      "} else if (strncmp(buf, \"popen\", 5) == 0)",
+      "} else if (strncmp(buf, \"pclose\", 6) == 0)",
+      "} else if (strncmp(buf, \"proc_open\", 9) == 0)",
+      "} else if (strncmp(buf, \"waitpid\", 7) == 0)",
+      "} else if (strncmp(buf, \"change_user\", 11) == 0)",
+      "Logger::Info(\"LightProcess got invalid command: %.20s\", buf",
+      "fprintf(g_procs[id].m_fout, \"popen\\n%s\\n%s\\n%s\\n\", type, cmd, cwd",
+      "fflush(g_procs[id].m_fout",
+      "char buf[BUFFER_SIZE]",
+      "read_buf(g_procs[id].m_fin, buf",
+      "if (strncmp(buf, \"error\", 5) == 0)",
+      "read_buf(g_procs[id].m_fin, buf",
+      "sscanf(buf, \"%\" PRId64, &fptr",
+      "fprintf(g_procs[id].m_fout, \"pclose\\n%\" PRId64 \"\\n\", f2",
+      "fflush(g_procs[id].m_fout",
+      "char buf[BUFFER_SIZE]",
+      "read_buf(g_procs[id].m_fin, buf",
+      "sscanf(buf, \"%d\", &ret",
+      "read_buf(g_procs[id].m_fin, buf",
+      "sscanf(buf, \"%d\", &errno",
+      "if (fprintf(g_procs[id].m_fout, \"proc_open\\n%s\\n%s\\n\", cmd, cwd) <= 0)",
+      "Logger::Error(\"Failed to send command proc_open\"",
+      "return -1",
+      "fprintf(g_procs[id].m_fout, \"%d\\n\", (int)env.size",
+      "fprintf(g_procs[id].m_fout, \"%s\\n\", env[i].c_str",
+      "fprintf(g_procs[id].m_fout, \"%d\\n\", (int)created.size",
+      "fprintf(g_procs[id].m_fout, \"%d\\n\", desired[i]",
+      "fflush(g_procs[id].m_fout",
+      "char buf[BUFFER_SIZE]",
+      "read_buf(g_procs[id].m_fin, buf",
+      "if (strncmp(buf, \"error\", 5) == 0)",
+      "read_buf(g_procs[id].m_fin, buf",
+      "sscanf(buf, \"%d\", &errno",
+      "sscanf(buf, \"%\" PRId64, &pid",
+      "assert(pid",
+      "fprintf(g_procs[id].m_fout, \"waitpid\\n%\" PRId64 \" %d %d\\n\", (int64_t)pid, options,",
+      "timeout",
+      "char buf[BUFFER_SIZE]",
+      "read_buf(g_procs[id].m_fin, buf",
+      "if (!buf[0]) return -1",
+      "sscanf(buf, \"%\" PRId64 \" %d\", &ret, &stat",
+      "read_buf(g_procs[id].m_fin, buf",
+      "sscanf(buf, \"%d\", &errno",
+      "fprintf(g_procs[i].m_fout, \"change_user\\n%s\\n\", username.c_str",
+      "fflush(g_procs[i].m_fout"
+    ],
+    "cause": [
+      "Uncategorized Cluster 5"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "MEM_ALLOC",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "MEM_FREE",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "RETURN",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARRAY_ACCESS",
+      "RETURN",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "RETURN",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "CRLF injection vulnerability"
+    ]
+  },
+  {
+    "index": 467,
+    "id": "CVE-2013-7262",
+    "commit_id": "3a10f6b829297dae63492a8c63385044bc6953ed",
+    "added_lines": [
+      "if( strchr(timestring,'\\'') || strchr(timestring, '\\\\') )",
+      "msSetError(MS_MISCERR, \"Invalid time filter.\", \"msPostGISLayerSetTimeFilter()\"",
+      "return MS_FALSE"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode Sql",
+    "score": 6.8,
+    "safe_features": [
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code Sql ",
+    "summary": [
+      "SQL injection",
+      "sql injection"
+    ]
+  },
+  {
+    "index": 505,
+    "id": "CVE-2015-5685",
+    "commit_id": "e809ea80e3527e32c40756eddd8b2ae44bc3af1a",
+    "added_lines": [
+      "const ptrdiff_t buff_size = end - start - 1",
+      "if (len > buff_size",
+      "const ptrdiff_t buff_size = end - start - 1",
+      "if (len > buff_size",
+      "if (start == end) TORRENT_FAIL_BDECODE(bdecode_errors::unexpected_eof"
+    ],
+    "removed_lines": [
+      "if (start + len + 1 > end",
+      "if (start + len + 1 > end"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "CONTROL_FLOW"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "*improper indexing.*"
+    ]
+  },
+  {
+    "index": 519,
+    "id": "CVE-2015-4335",
+    "commit_id": "fdf9d455098f54f7666c702ae464e6ea21e25411",
+    "added_lines": [
+      "tf = (luaY_parser)(L, p->z,"
+    ],
+    "removed_lines": [
+      "tf = ((c == LUA_SIGNATURE[0]) ? luaU_undump : luaY_parser)(L, p->z,"
+    ],
+    "cause": [
+      "Uncategorized"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unknown"
+    ]
+  },
+  {
+    "index": 576,
+    "id": "CVE-2015-0231",
+    "commit_id": "b585a3aed7880a5fa5c18e2b838fc96f40e075bd",
+    "added_lines": [
+      "if (zend_hash_find(ht, Z_STRVAL_P(key), Z_STRLEN_P(key) + 1, (void **)&old_data)==SUCCESS)"
+    ],
+    "removed_lines": [
+      "if (zend_symtable_find(ht, Z_STRVAL_P(key), Z_STRLEN_P(key) + 1, (void **)&old_data)==SUCCESS)"
+    ],
+    "cause": [
+      "Memory Management"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "use-after-free"
+    ]
+  },
+  {
+    "index": 695,
+    "id": "CVE-2016-7117",
+    "commit_id": "34b88a68f26a75e4fded796f1a49c40f82234b7d",
+    "added_lines": [
+      "goto out_put",
+      "if (datagrams == 0)",
+      "datagrams = err",
+      "goto out_put",
+      "if (err != -EAGAIN)",
+      "sock->sk->sk_err = -err",
+      "out_put:",
+      "fput_light(sock->file, fput_needed",
+      "return datagrams"
+    ],
+    "removed_lines": [
+      "out_put:",
+      "fput_light(sock->file, fput_needed",
+      "return datagrams",
+      "if (datagrams != 0)",
+      "if (err != -EAGAIN)",
+      "sock->sk->sk_err = -err",
+      "return datagrams",
+      "return err"
+    ],
+    "cause": [
+      "Memory Management",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "NO_OP",
+      "CONTROL_FLOW",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN",
+      "CONTROL_FLOW",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "RETURN",
+      "RETURN"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "recvmmsg",
+      "use-after-free"
+    ]
+  },
+  {
+    "index": 807,
+    "id": "CVE-2016-3132",
+    "commit_id": "28a6ed9f9a36b9c517e4a8a429baf4dd382fc5d5?w=1",
+    "added_lines": [
+      "--TEST--",
+      "Bug #71735 (Double-free in SplDoublyLinkedList::offsetSet",
+      "--FILE--",
+      "<?php",
+      "try",
+      "$var_1=new SplStack",
+      "$var_1->offsetSet(100,new DateTime('2000-01-01'",
+      "} catch(OutOfRangeException $e)",
+      "print $e->getMessage().\"\\n\"",
+      "?>",
+      "===DONE===",
+      "--EXPECT--",
+      "Offset invalid or out of range",
+      "===DONE==="
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 7"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "ARITHMETIC",
+      "MEM_FREE",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "double free"
+    ]
+  },
+  {
+    "index": 892,
+    "id": "CVE-2015-8617",
+    "commit_id": "b101a6bbd4f2181c360bd38e7683df4a03cba83e",
+    "added_lines": [
+      "zend_throw_error(exception_ce, \"%s\", message"
+    ],
+    "removed_lines": [
+      "zend_throw_error(exception_ce, message"
+    ],
+    "cause": [
+      "Logical Flaws",
+      "Uncategorized Cluster 5"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "incorrect error handling",
+      "format string vulnerability"
+    ]
+  },
+  {
+    "index": 923,
+    "id": "CVE-2013-7455",
+    "commit_id": "fefaaa43c382eee632ea3ad0cfa915335140e1db",
+    "added_lines": [
+      "Lut = NULL",
+      "if (Lut != NULL) cmsPipelineFree(Lut"
+    ],
+    "removed_lines": [
+      "cmsPipelineFree(Lut"
+    ],
+    "cause": [
+      "Uncategorized Cluster 7"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "NO_OP",
+      "CONTROL_FLOW"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "double free"
+    ]
+  },
+  {
+    "index": 936,
+    "id": "CVE-2017-1000369",
+    "commit_id": "65e061b76867a9ea7aeeb535341b790b90ae6c21",
+    "added_lines": [
+      "else if (Ustrcmp(argrest, \"Mr\") == 0",
+      "if (received_protocol",
+      "fprintf(stderr, \"received_protocol is set already\\n\"",
+      "exit(EXIT_FAILURE",
+      "else received_protocol = argv[++i]",
+      "uschar *hn",
+      "if (received_protocol",
+      "fprintf(stderr, \"received_protocol is set already\\n\"",
+      "exit(EXIT_FAILURE",
+      "hn = Ustrchr(argrest, ':'"
+    ],
+    "removed_lines": [
+      "else if (Ustrcmp(argrest, \"Mr\") == 0) received_protocol = argv[++i]",
+      "uschar *hn = Ustrchr(argrest, ':'"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 2.1,
+    "safe_features": [
+      "NO_OP",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 940,
+    "id": "CVE-2017-1000215",
+    "commit_id": "befa2e627a5a33a38c92db3e57c07d8246a24acf",
+    "added_lines": [],
+    "removed_lines": [
+      "\"libXrdSecgsiGMAPLDAP.so\",  \\"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [],
+    "unsafe_features": [
+      "NO_OP"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 942,
+    "id": "CVE-2017-1000203",
+    "commit_id": "88ccff152604e0f1012653a596d802ff7ede3145#diff-6cd6f6c31bac70116b7ca7abdc8e517e",
+    "added_lines": [
+      "static const char *WorkingDirectory",
+      "static char path[kMAXPATHLEN]",
+      "if (getcwd(path, kMAXPATHLEN)) return path",
+      "return 0",
+      "Bool_t RootdExpandFileName(const char *fname, char *xname, const int kBufSize",
+      "int n, ier, iter, lx, ncopy",
+      "char *inp, *out, *x, *t, buff[kBufSize * 4]",
+      "const char *b, *c, *e",
+      "const char *p",
+      "iter = 0",
+      "xname[0] = 0",
+      "inp = buff + kBufSize",
+      "out = inp + kBufSize",
+      "inp[-1] = ' '",
+      "inp[0] = 0",
+      "out[-1] = ' '",
+      "c = fname + strspn(fname, \" \\t\\f\\r\"",
+      "strncat(inp, c, kBufSize - strlen(inp) - 1",
+      "again:",
+      "iter++",
+      "c = inp",
+      "ier = 0",
+      "x = out",
+      "x[0] = 0",
+      "p = 0",
+      "e = 0",
+      "if (c[0] == '~' && c[1] == '/') { // ~/ case",
+      "std::string hd = HomeDirectory(0",
+      "p = hd.c_str",
+      "e = c + 1",
+      "if (p) { // we have smth to copy",
+      "strlcpy(x, p, kBufSize",
+      "x += strlen(p",
+      "c = e",
+      "++ier",
+      "++c",
+      "} else if (c[0] == '~' && c[1] != '/') { // ~user case",
+      "n = strcspn(c + 1, \"/ \"",
+      "buff[0] = 0",
+      "strncat(buff, c + 1, n",
+      "std::string hd = HomeDirectory(buff",
+      "e = c + 1 + n",
+      "if (!hd.empty()) { // we have smth to copy",
+      "p = hd.c_str",
+      "strlcpy(x, p, kBufSize",
+      "x += strlen(p",
+      "c = e",
+      "} else",
+      "x++ [0] = c[0]",
+      "++c",
+      "for (; c[0]; c++)",
+      "p = 0",
+      "e = 0",
+      "if (c[0] == '.' && c[1] == '/' && c[-1] == ' ') { // $cwd",
+      "std::string wd = WorkingDirectory",
+      "strlcpy(buff, wd.c_str(), kBufSize",
+      "p = buff",
+      "e = c + 1",
+      "if (p) { // we have smth to copy */",
+      "strlcpy(x, p, kBufSize",
+      "x += strlen(p",
+      "c = e - 1",
+      "continue",
+      "if (c[0] != '$') { // not $, simple copy",
+      "x++ [0] = c[0]",
+      "} else { // we have a $",
+      "b = c + 1",
+      "if (c[1] == '(') b++",
+      "if (c[1] == '{') b++",
+      "if (b[0] == '$'",
+      "e = b + 1",
+      "else",
+      "for (e = b; isalnum(e[0]) || e[0] == '_'; e++",
+      "buff[0] = 0",
+      "strncat(buff, b, e - b",
+      "p = getenv(buff",
+      "if (!p) { // too bad, try UPPER case",
+      "for (t = buff; (t[0] = toupper(t[0])); t++",
+      "p = getenv(buff",
+      "if (!p) { // too bad, try Lower case",
+      "for (t = buff; (t[0] = tolower(t[0])); t++",
+      "p = getenv(buff",
+      "if (!p && !strcmp(buff, \"cwd\")) { // it is $cwd",
+      "std::string wd = WorkingDirectory",
+      "strlcpy(buff, wd.c_str(), kBufSize",
+      "p = buff",
+      "if (!p && !strcmp(buff, \"$\")) { // it is $$ (replace by getpid",
+      "snprintf(buff, kBufSize * 4, \"%d\", (int)getpid",
+      "p = buff",
+      "if (!p) { // too bad, nothing can help",
+      "ier++",
+      "x++ [0] = c[0]",
+      "} else { // It is OK, copy result",
+      "int lp = strlen(p",
+      "if (lp >= kBufSize)",
+      "strlcpy(x, p, kBufSize",
+      "x += kBufSize",
+      "break",
+      "strcpy(x, p",
+      "x += lp",
+      "c = (b == c + 1) ? e - 1 : e",
+      "x[0] = 0",
+      "lx = x - out",
+      "if (ier && iter < 3)",
+      "strlcpy(inp, out, kBufSize",
+      "goto again",
+      "ncopy = (lx >= kBufSize) ? kBufSize - 1 : lx",
+      "xname[0] = 0",
+      "strncat(xname, out, ncopy",
+      "if (ier || ncopy != lx)",
+      "Error(ErrFatal, kErrFatal, \"RootdExpandFileName: fatal error:\\n\\t input: %s\\n\\t output: %s\", fname, xname",
+      "return true",
+      "return false",
+      "char *RootdExpandPathName(const char *name",
+      "const char *patbuf = name",
+      "while (*patbuf == ' ') patbuf++",
+      "bool needesc = false",
+      "for (const char *p = patbuf; *p; p++",
+      "if (strchr(shellMeta, *p))",
+      "needesc = true",
+      "break",
+      "if (needesc)",
+      "const int kBufSize = kMAXPATHLEN",
+      "char xname[kBufSize]",
+      "if (RootdExpandFileName(name, xname, kBufSize))",
+      "Error(ErrFatal, kErrFatal, \"RootdExpandPathName: problem escaping meta characters\"",
+      "} else",
+      "return strdup(xname",
+      "return strdup(name"
+    ],
+    "removed_lines": [
+      "static int EscChar(const char *src, char *dst, int dstlen, const char *specchars, char escchar",
+      "const char *p",
+      "char *q, *end = dst+dstlen-1",
+      "for (p = src, q = dst; *p && q < end; )",
+      "if (strchr(specchars, *p))",
+      "if (q < end",
+      "} else",
+      "if (*p != 0",
+      "return -1",
+      "return q-dst",
+      "char *RootdExpandPathName(const char *name",
+      "const char *patbuf = name",
+      "while (*patbuf == ' '",
+      "patbuf++",
+      "for (const char *p = patbuf; *p; p++",
+      "if (strchr(shellMeta, *p",
+      "goto needshell",
+      "return strdup(name",
+      "needshell:",
+      "char escPatbuf[kMAXPATHLEN]",
+      "EscChar(patbuf, escPatbuf, sizeof(escPatbuf), shellStuff, shellEscape",
+      "char cmd[kMAXPATHLEN]",
+      "#ifdef __hpux",
+      "strlcpy(cmd, \"/bin/echo \", sizeof(cmd",
+      "#else",
+      "strlcpy(cmd, \"echo \", sizeof(cmd",
+      "#endif",
+      "if (escPatbuf[0] == '~')",
+      "const char *hd",
+      "if (escPatbuf[1] != '\\0' && escPatbuf[1] != '/')",
+      "char uname[70], *p, *q",
+      "for (p = &escPatbuf[1], q = uname; *p && *p !='/'",
+      "hd = HomeDirectory(uname",
+      "if (hd == 0",
+      "strcat(cmd, escPatbuf",
+      "else",
+      "strcat(cmd, hd",
+      "strcat(cmd, p",
+      "hd = HomeDirectory(0",
+      "if (hd == 0)",
+      "Error(ErrSys, kErrFatal, \"RootdExpandPathName: no home directory\"",
+      "return 0",
+      "strcat(cmd, hd",
+      "strcat(cmd, &escPatbuf[1]",
+      "} else",
+      "strcat(cmd, escPatbuf",
+      "FILE *pf",
+      "if ((pf = ::popen(&cmd[0], \"r\")) == 0)",
+      "Error(ErrSys, kErrFatal, \"RootdExpandPathName: error in popen(%s)\", cmd",
+      "return 0",
+      "char expPatbuf[kMAXPATHLEN]",
+      "int  ch, i, cnt = 0",
+      "again:",
+      "for (i = 0, ch = fgetc(pf); ch != EOF && ch != ' ' && ch != '\\n'; i++, ch = fgetc(pf))",
+      "expPatbuf[i] = ch",
+      "cnt++",
+      "if (cnt == 0 && ch == EOF) goto again",
+      "expPatbuf[cnt] = '\\0'",
+      "while (ch != EOF)",
+      "ch = fgetc(pf",
+      "if (ch == ' ' || ch == '\\t')",
+      "::pclose(pf",
+      "Error(ErrFatal, kErrFatal, \"RootdExpandPathName: expression ambigous\"",
+      "::pclose(pf",
+      "return strdup(expPatbuf"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 9.0,
+    "safe_features": [
+      "POINTER_OP",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "RETURN",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN",
+      "RETURN",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "RETURN",
+      "ARITHMETIC",
+      "RETURN",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "RETURN",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "RETURN"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 946,
+    "id": "CVE-2017-1000083",
+    "commit_id": "717df38fd8509bf883b70d680c9b1b3cf36732ee",
+    "added_lines": [
+      "COMICS_MIME_TYPES=\"application/x-cbr;application/x-cbz;application/x-cb7;application/x-ext-cbr;application/x-ext-cbz;application/vnd.comicbook+zip;application/x-ext-cb7;\""
+    ],
+    "removed_lines": [
+      "COMICS_MIME_TYPES=\"application/x-cbr;application/x-cbz;application/x-cb7;application/x-cbt;application/x-ext-cbr;application/x-ext-cbz;application/vnd.comicbook+zip;application/x-ext-cb7;application/x-ext-cbt\""
+    ],
+    "cause": [
+      "Uncategorized"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unknown"
+    ]
+  },
+  {
+    "index": 958,
+    "id": "CVE-2017-17712",
+    "commit_id": "8f659a03a0ba9289b9aeb9b4470e6fb263d6f483",
+    "added_lines": [
+      "int hdrincl",
+      "hdrincl = inet->hdrincl",
+      "if (hdrincl",
+      "hdrincl ? IPPROTO_RAW : sk->sk_protocol,",
+      "(hdrincl ? FLOWI_FLAG_KNOWN_NH : 0),",
+      "if (!hdrincl)",
+      "if (hdrincl"
+    ],
+    "removed_lines": [
+      "if (inet->hdrincl",
+      "inet->hdrincl ? IPPROTO_RAW : sk->sk_protocol,",
+      "(inet->hdrincl ? FLOWI_FLAG_KNOWN_NH : 0),",
+      "if (!inet->hdrincl)",
+      "if (inet->hdrincl"
+    ],
+    "cause": [
+      "Race Condition or Concurrency"
+    ],
+    "effect": "ExecCode +Priv",
+    "score": 6.9,
+    "safe_features": [
+      "NO_OP",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "CONTROL_FLOW"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code +Priv ",
+    "summary": [
+      "race condition"
+    ]
+  },
+  {
+    "index": 1027,
+    "id": "CVE-2017-14604",
+    "commit_id": "1630f53481f445ada0a455e9979236d31a8d3bb0",
+    "added_lines": [
+      "#include \"nautilus-metadata.h\"",
+      "case GTK_RESPONSE_OK:",
+      "file = nautilus_file_get_location (parameters->file",
+      "nautilus_file_set_metadata (parameters->file, NAUTILUS_METADATA_KEY_DESKTOP_FILE_TRUSTED,",
+      "NULL,",
+      "\"yes\"",
+      "nautilus_file_mark_desktop_file_executable (file,",
+      "parameters->parent_window,",
+      "TRUE,",
+      "NULL, NULL",
+      "nautilus_file_invalidate_all_attributes (parameters->file",
+      "_(\"_Cancel\"), GTK_RESPONSE_CANCEL",
+      "gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL",
+      "_(\"Trust and _Launch\"), GTK_RESPONSE_OK"
+    ],
+    "removed_lines": [
+      "#define RESPONSE_MARK_TRUSTED 1003",
+      "case RESPONSE_RUN:",
+      "break",
+      "case RESPONSE_MARK_TRUSTED:",
+      "file = nautilus_file_get_location (parameters->file",
+      "nautilus_file_mark_desktop_file_trusted (file,",
+      "parameters->parent_window,",
+      "TRUE,",
+      "NULL, NULL",
+      "_(\"_Launch Anyway\"), RESPONSE_RUN",
+      "_(\"Mark as _Trusted\"), RESPONSE_MARK_TRUSTED",
+      "gtk_dialog_add_button (GTK_DIALOG (dialog),",
+      "_(\"_Cancel\"), GTK_RESPONSE_CANCEL",
+      "gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL"
+    ],
+    "cause": [
+      "Uncategorized Cluster 8"
+    ],
+    "effect": "ExecCode",
+    "score": 4.0,
+    "safe_features": [
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "file type"
+    ]
+  },
+  {
+    "index": 1029,
+    "id": "CVE-2017-14500",
+    "commit_id": "c8fea2f60c18ed30bdd1bb6f798e994e51a58260",
+    "added_lines": [
+      "fn.append(utils::replace_all(base, \"'\", \"%27\""
+    ],
+    "removed_lines": [
+      "fn.append(base"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 1077,
+    "id": "CVE-2017-13083",
+    "commit_id": "c3c39f7f8a11f612c4ebf7affce25ec6928eb1cb",
+    "added_lines": [
+      "if (ValidateSignature(hDlg, filepath) != NO_ERROR)",
+      "_unlinkU(filepath",
+      "EnableWindow(GetDlgItem(hDlg, IDC_DOWNLOAD), FALSE"
+    ],
+    "removed_lines": [
+      "if (ValidateSignature(hDlg, filepath) != NO_ERROR"
+    ],
+    "cause": [
+      "Parsing or Interpretation Errors"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "does not adequately validate the integrity of updates downloaded over HTTP"
+    ]
+  },
+  {
+    "index": 1151,
+    "id": "CVE-2017-12904",
+    "commit_id": "96e9506ae9e252c548665152d1b8968297128307",
+    "added_lines": [
+      "std::string cmdline = strprintf::fmt(\"%s '%s' '%s' '%s' '%s'\",",
+      "utils::replace_all(title,\"'\", \"%27\"),",
+      "utils::replace_all(description,\"'\", \"%27\"),",
+      "utils::replace_all(feed_title,\"'\", \"%27\""
+    ],
+    "removed_lines": [
+      "std::string cmdline = strprintf::fmt(\"%s '%s' %s %s %s\",",
+      "quote_empty(stfl::quote(title)),",
+      "quote_empty(stfl::quote(description)),",
+      "quote_empty(stfl::quote(feed_title"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 9.3,
+    "safe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 1165,
+    "id": "CVE-2017-12847",
+    "commit_id": "1b197346d490df2e2d3b1dcce5ac6134ad0c8752",
+    "added_lines": [
+      "AC_SUBST(CHECKRESULTDIR",
+      "AC_SUBST(lockfile"
+    ],
+    "removed_lines": [
+      "eval localstatedir=$localstatedir",
+      "eval lockfile=$lockfile",
+      "eval CHECKRESULTDIR=$CHECKRESULTDIR",
+      "AC_SUBST(CHECKRESULTDIR",
+      "AC_SUBST(lockfile"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.3,
+    "safe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "leveraging access to this non-root account for nagios.lock modification before a root script executes a *kill `cat /pathname/nagios.lock`* command"
+    ]
+  },
+  {
+    "index": 1278,
+    "id": "CVE-2017-8288",
+    "commit_id": "ff425d1db7082e2755d2a405af53861552acf2a1",
+    "added_lines": [
+      "try",
+      "reloadExtension(ExtensionUtils.extensions[uuid]",
+      "} catch(e)",
+      "logExtensionError(uuid, e",
+      "try",
+      "enableExtension(uuid",
+      "} catch(e)",
+      "logExtensionError(uuid, e"
+    ],
+    "removed_lines": [
+      "reloadExtension(ExtensionUtils.extensions[uuid]",
+      "enableExtension(uuid"
+    ],
+    "cause": [
+      "Parsing or Interpretation Errors"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "mishandles extensions that fail to reload"
+    ]
+  },
+  {
+    "index": 1425,
+    "id": "CVE-2017-0576",
+    "commit_id": "0dd1a733e60cf5239c0a185d4219ba2ef1118a8b",
+    "added_lines": [
+      "#include <stdlib.h>",
+      "#include <stdio.h>",
+      "#include <unistd.h>",
+      "#include <sys/ioctl.h>",
+      "#include <sys/types.h>",
+      "#include <sys/stat.h>",
+      "#include <sys/mman.h>",
+      "#include <fcntl.h>",
+      "#include <limits.h>",
+      "#include <inttypes.h>",
+      "static const char *dev = \"/dev/qce\"",
+      "#define QCEDEV_MAX_KEY_SIZE     64",
+      "#define QCEDEV_MAX_IV_SIZE      32",
+      "#define QCEDEV_MAX_BUFFERS      16",
+      "struct  buf_info",
+      "union",
+      "uint32_t        offset",
+      "uint8_t         *vaddr",
+      "uint32_t        len",
+      "struct  qcedev_vbuf_info",
+      "struct buf_info src[QCEDEV_MAX_BUFFERS]",
+      "struct buf_info dst[QCEDEV_MAX_BUFFERS]",
+      "struct  qcedev_pmem_info",
+      "int             fd_src",
+      "struct buf_info src[QCEDEV_MAX_BUFFERS]",
+      "int             fd_dst",
+      "struct buf_info dst[QCEDEV_MAX_BUFFERS]",
+      "enum qcedev_oper_enum",
+      "QCEDEV_OPER_DEC         = 0,",
+      "QCEDEV_OPER_ENC         = 1,",
+      "QCEDEV_OPER_DEC_NO_KEY  = 2,",
+      "QCEDEV_OPER_ENC_NO_KEY  = 3,",
+      "QCEDEV_OPER_LAST",
+      "enum qcedev_cipher_alg_enum",
+      "QCEDEV_ALG_DES          = 0,",
+      "QCEDEV_ALG_3DES         = 1,",
+      "QCEDEV_ALG_AES          = 2,",
+      "QCEDEV_ALG_LAST",
+      "enum qcedev_cipher_mode_enum",
+      "QCEDEV_AES_MODE_CBC     = 0,",
+      "QCEDEV_AES_MODE_ECB     = 1,",
+      "QCEDEV_AES_MODE_CTR     = 2,",
+      "QCEDEV_AES_MODE_XTS     = 3,",
+      "QCEDEV_AES_MODE_CCM     = 4,",
+      "QCEDEV_DES_MODE_CBC     = 5,",
+      "QCEDEV_DES_MODE_ECB     = 6,",
+      "QCEDEV_AES_DES_MODE_LAST",
+      "struct  qcedev_cipher_op_req",
+      "uint8_t                         use_pmem",
+      "union",
+      "struct qcedev_pmem_info pmem",
+      "struct qcedev_vbuf_info vbuf",
+      "uint32_t                        entries",
+      "uint32_t                        data_len",
+      "uint8_t                         in_place_op",
+      "uint8_t                         enckey[QCEDEV_MAX_KEY_SIZE]",
+      "uint32_t                        encklen",
+      "uint8_t                         iv[QCEDEV_MAX_IV_SIZE]",
+      "uint32_t                        ivlen",
+      "uint32_t                        byteoffset",
+      "enum qcedev_cipher_alg_enum     alg",
+      "enum qcedev_cipher_mode_enum    mode",
+      "enum qcedev_oper_enum           op",
+      "#define QCEDEV_IOC_MAGIC        0x87",
+      "#define QCEDEV_IOCTL_ENC_REQ            \\",
+      "_IOWR(QCEDEV_IOC_MAGIC, 1, struct qcedev_cipher_op_req",
+      "#define QCEDEV_IOCTL_DEC_REQ            \\",
+      "_IOWR(QCEDEV_IOC_MAGIC, 2, struct qcedev_cipher_op_req",
+      "void thread_func(unsigned int start, unsigned int end, int fd",
+      "struct qcedev_cipher_op_req req = { 0",
+      "unsigned int i",
+      "char *data",
+      "data = mmap(NULL, 0xFFFFFF * 3, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE|MAP_POPULATE, -1, 0",
+      "if (data == MAP_FAILED)",
+      "printf(\"mmap failed, get a better phone\\n\"",
+      "exit(0",
+      "for (i = 0; i < 0xFFFFFF * 3; i += sizeof(void*",
+      "req.in_place_op = 1",
+      "req.entries = 2",
+      "req.byteoffset = 15",
+      "req.mode = QCEDEV_AES_MODE_CTR",
+      "req.op = QCEDEV_OPER_ENC;//_NO_KEY",
+      "req.ivlen = 1",
+      "req.data_len = 0xFFFFFFFE",
+      "req.vbuf.src[0].len = 4",
+      "req.vbuf.src[1].len = 0xFFFFFFFE - 4",
+      "req.vbuf.src[0].vaddr = (uint8_t*)data",
+      "req.vbuf.src[1].vaddr = (uint8_t*)data",
+      "req.vbuf.dst[0].len = 4",
+      "req.vbuf.dst[1].len = 0xFFFFFFFE - 4",
+      "req.vbuf.dst[0].vaddr = (uint8_t*)data",
+      "req.vbuf.dst[1].vaddr = (uint8_t*)data",
+      "ioctl(fd, QCEDEV_IOCTL_ENC_REQ, &req",
+      "printf(\"exiting\\n\"",
+      "exit(0",
+      "int main(void",
+      "int fd",
+      "unsigned int i",
+      "unsigned int start = 0",
+      "unsigned int _gap = ~0",
+      "unsigned int gap = _gap / 8",
+      "struct qcedev_cipher_op_req req = { 0",
+      "char *data",
+      "fd = open(dev, O_RDWR",
+      "if (fd < 0)",
+      "printf(\"Failed to open %s with errno %s\\n\", dev,",
+      "strerror(errno",
+      "return EXIT_FAILURE",
+      "thread_func(start, start + gap, fd",
+      "sleep(1000000",
+      "return EXIT_FAILURE"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Configuration or Permissions Errors"
+    ],
+    "effect": "ExecCode",
+    "score": 7.6,
+    "safe_features": [
+      "NO_OP",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "RETURN",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "RETURN"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "An elevation of privilege vulnerability"
+    ]
+  },
+  {
+    "index": 1448,
+    "id": "CVE-2016-10229",
+    "commit_id": "197c949e7798fbf28cfadc69d9ca0c2abbf93191",
+    "added_lines": [
+      "bool checksum_valid = false",
+      "checksum_valid = !udp_lib_checksum_complete(skb",
+      "if (!checksum_valid",
+      "if (checksum_valid || skb_csum_unnecessary(skb"
+    ],
+    "removed_lines": [
+      "if (udp_lib_checksum_complete(skb",
+      "if (skb_csum_unnecessary(skb"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "CONTROL_FLOW"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unsafe second checksum calculation"
+    ]
+  },
+  {
+    "index": 1555,
+    "id": "CVE-2016-7838",
+    "commit_id": "bb454857348245a7397f9e4fbb3a902f4ac25913",
+    "added_lines": [
+      "std::wstring GetUniqueTempDirectoryPrefix",
+      "wchar_t tmpdir[MAX_PATH + 1]",
+      "if (GetTempPath(MAX_PATH + 1, tmpdir) == 0",
+      "throw Win32Exception(\"Cannot create temporary directory\"",
+      "std::wstring dir(tmpdir",
+      "dir += L\"Update-\"",
+      "return dir",
+      "const std::wstring tmpdir = GetUniqueTempDirectoryPrefix",
+      "try",
+      "if (tmpdir.find(GetUniqueTempDirectoryPrefix()) != 0",
+      "Settings::DeleteConfigValue(\"UpdateTempDir\"",
+      "return",
+      "catch (Win32Exception&) // cannot determine temp directory",
+      "return"
+    ],
+    "removed_lines": [
+      "wchar_t tmpdir[MAX_PATH+1]",
+      "if ( GetTempPath(MAX_PATH+1, tmpdir) == 0",
+      "throw Win32Exception(\"Cannot create temporary directory\"",
+      "dir += L\"Update-\""
+    ],
+    "cause": [
+      "Uncategorized Cluster 5",
+      "Uncategorized Cluster 5"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "Untrusted search path vulnerability",
+      "untrusted search path vulnerability"
+    ]
+  },
+  {
+    "index": 1559,
+    "id": "CVE-2016-7545",
+    "commit_id": "acca96a135a4d2a028ba9b636886af99c0915379",
+    "added_lines": [
+      "pid = os.fork",
+      "if pid == 0:",
+      "rc = os.setsid",
+      "if rc:",
+      "return rc",
+      "selinux.setexeccon(self.__execcon",
+      "os.execv(self.__cmds[0], self.__cmds",
+      "rc = os.waitpid(pid, 0",
+      "return os.WEXITSTATUS(rc[1]"
+    ],
+    "removed_lines": [
+      "selinux.setexeccon(self.__execcon",
+      "rc = subprocess.Popen(self.__cmds).wait",
+      "selinux.setexeccon(None",
+      "return rc"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.2,
+    "safe_features": [
+      "NO_OP",
+      "CONTROL_FLOW",
+      "CONTROL_FLOW",
+      "RETURN",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "RETURN"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "ioctl call"
+    ]
+  },
+  {
+    "index": 1607,
+    "id": "CVE-2016-2347",
+    "commit_id": "6fcdb8f1f538b9d63e63a5fa199c5514a15d4564",
+    "added_lines": [
+      "if (nbytes > LEVEL_3_MAX_HEADER_LEN)",
+      "return NULL",
+      "if (header_len > LEVEL_3_MAX_HEADER_LEN",
+      "|| header_len < RAW_DATA_LEN(header))"
+    ],
+    "removed_lines": [
+      "if (header_len > LEVEL_3_MAX_HEADER_LEN)"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "CONTROL_FLOW",
+      "RETURN",
+      "CONTROL_FLOW",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "integer underflow",
+      "integer underflow"
+    ]
+  },
+  {
+    "index": 1609,
+    "id": "CVE-2015-9059",
+    "commit_id": "1ebc60b20fbe9a02436d5cbbf8951714e749ddb1",
+    "added_lines": [
+      "#include \"split.h\"",
+      "#define RUNCMD_ARGS_MAX 32",
+      "#define RUNCMD_EXEC_FAIL 126",
+      "run_cmd(int fd, const char *cmd, const char *args_extra",
+      "int argc",
+      "char *argv[RUNCMD_ARGS_MAX + 1]",
+      "int r",
+      "argc = 0",
+      "r = split_quoted(cmd, &argc, argv, RUNCMD_ARGS_MAX",
+      "if ( r < 0 )",
+      "fd_printf(STDERR_FILENO, \"Cannot parse command\\n\"",
+      "exit(RUNCMD_EXEC_FAIL",
+      "r = split_quoted(args_extra, &argc, argv, RUNCMD_ARGS_MAX",
+      "if ( r < 0 )",
+      "fd_printf(STDERR_FILENO, \"Cannot parse extra args\\n\"",
+      "exit(RUNCMD_EXEC_FAIL",
+      "if ( argc < 1 )",
+      "fd_printf(STDERR_FILENO, \"No command given\\n\"",
+      "exit(RUNCMD_EXEC_FAIL",
+      "argv[argc] = NULL",
+      "fd_printf(STDERR_FILENO, \"$ %s %s\\n\", cmd, args_extra",
+      "execvp(argv[0], argv",
+      "fd_printf(STDERR_FILENO, \"exec: %s\\n\", strerror(errno",
+      "exit(RUNCMD_EXEC_FAIL",
+      "run_cmd(tty_fd, xfr_cmd, fname"
+    ],
+    "removed_lines": [
+      "#define EXEC \"exec \"",
+      "run_cmd(int fd, ...",
+      "char cmd[512]",
+      "char *c, *ce",
+      "const char *s",
+      "int n",
+      "va_list vls",
+      "strcpy(cmd, EXEC",
+      "c = &cmd[sizeof(EXEC)- 1]",
+      "ce = cmd + sizeof(cmd) - 1",
+      "va_start(vls, fd",
+      "while ( (s = va_arg(vls, const char *)) )",
+      "n = strlen(s",
+      "if ( c + n + 1 >= ce ) break",
+      "memcpy(c, s, n); c += n",
+      "va_end(vls",
+      "fd_printf(STDERR_FILENO, \"%s\\n\", &cmd[sizeof(EXEC) - 1]",
+      "execl(\"/bin/sh\", \"sh\", \"-c\", cmd, NULL",
+      "exit(42",
+      "#undef EXEC",
+      "run_cmd(tty_fd, xfr_cmd, fname, NULL"
+    ],
+    "cause": [
+      "Uncategorized Cluster 5"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "NO_OP",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "command injection vulnerability"
+    ]
+  },
+  {
+    "index": 1647,
+    "id": "CVE-2014-9938",
+    "commit_id": "8976500cbbb13270398d3b3e07a17b8cc7bff43f",
+    "added_lines": [
+      "printf \"BEFORE: (\\${__git_ps1_branch_name}):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}\\${__git_ps1_branch_name}${c_clear}):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_red}\\${__git_ps1_branch_name}${c_clear}):AFTER\\\\n(%s...)\" $(git log -1 --format=\"%h\" b1^) >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}\\${__git_ps1_branch_name}${c_clear} ${c_red}*${c_clear}):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}\\${__git_ps1_branch_name}${c_clear} ${c_green}+${c_clear}):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}\\${__git_ps1_branch_name}${c_clear} ${c_red}*${c_green}+${c_clear}):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}\\${__git_ps1_branch_name}${c_clear} ${c_green}#${c_clear}):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}\\${__git_ps1_branch_name}${c_clear}):AFTER\\\\nGIT_DIR!\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}\\${__git_ps1_branch_name}${c_clear} ${c_lblue}\\$${c_clear}):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}\\${__git_ps1_branch_name}${c_clear} ${c_red}%%${c_clear}):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\"",
+      "printf \"BEFORE: (%%F{green}\\${__git_ps1_branch_name}%%f):AFTER\\\\nmaster\" >expected &&",
+      "printf \"%s\\\\n%s\" \"$PS1\" \"${__git_ps1_branch_name}\" >\"$actual\""
+    ],
+    "removed_lines": [
+      "printf \"BEFORE: (master):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}master${c_clear}):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_red}(%s...)${c_clear}):AFTER\" $(git log -1 --format=\"%h\" b1^) >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}master${c_clear} ${c_red}*${c_clear}):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}master${c_clear} ${c_green}+${c_clear}):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}master${c_clear} ${c_red}*${c_green}+${c_clear}):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}master${c_clear} ${c_green}#${c_clear}):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}GIT_DIR!${c_clear}):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}master${c_clear} ${c_lblue}\\$${c_clear}):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (${c_green}master${c_clear} ${c_red}%%${c_clear}):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\"",
+      "printf \"BEFORE: (%%F{green}master%%f):AFTER\" >expected &&",
+      "printf \"%s\" \"$PS1\" >\"$actual\""
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 1651,
+    "id": "CVE-2014-9114",
+    "commit_id": "89e90ae7b2826110ea28c1c0eb8e7c56c3907bdc",
+    "added_lines": [
+      "safe_print(value, valsz, \" \\\\\\\"'$`<>\"",
+      "safe_print(value, valsz, \"\\\"\\\\\""
+    ],
+    "removed_lines": [
+      "safe_print(value, valsz, NULL",
+      "safe_print(value, valsz, \"\\\"\""
+    ],
+    "cause": [
+      "Uncategorized"
+    ],
+    "effect": "ExecCode",
+    "score": 7.2,
+    "safe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unknown"
+    ]
+  },
+  {
+    "index": 1655,
+    "id": "CVE-2014-3741",
+    "commit_id": "e001e38738c17219a1d9dd8c31f7d82b9c0013c7",
+    "added_lines": [
+      "child_process.execFile('lpr', ['-P' + printer, '-oraw', '-r', temp_file_name], function(err, stdout, stderr"
+    ],
+    "removed_lines": [
+      "child_process.exec('lpr -P'+printer+' -oraw -r'+' '+temp_file_name, function(err, stdout, stderr"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unspecified characters"
+    ]
+  },
+  {
+    "index": 1728,
+    "id": "CVE-2018-17456",
+    "commit_id": "a124133e1e6ab5c7a9fef6d0e6bcb084e3455b46",
+    "added_lines": [
+      "test_expect_success 'fsck accepts protected dash' '",
+      "test_when_finished \"rm -rf dst\" &&",
+      "git init --bare dst &&",
+      "git -C dst config transfer.fsckObjects true &&",
+      "git push dst HEAD",
+      "'",
+      "test_expect_success 'fsck rejects unprotected dash' '",
+      "test_when_finished \"rm -rf dst\" &&",
+      "git init --bare dst &&",
+      "git -C dst config transfer.fsckObjects true &&",
+      "test_must_fail git push dst HEAD 2>err &&",
+      "grep gitmodulesUrl err",
+      "'"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "NO_OP",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 1804,
+    "id": "CVE-2018-14357",
+    "commit_id": "e52393740334443ae0206cab2d7caef381646725",
+    "added_lines": [
+      "void imap_quote_string(char *dest, size_t dlen, const char *src, bool quote_backtick",
+      "const char *quote = \"`\\\"\\\\\"",
+      "if (!quote_backtick",
+      "quote++",
+      "imap_quote_string(dest, dlen, buf, false"
+    ],
+    "removed_lines": [
+      "void imap_quote_string(char *dest, size_t dlen, const char *src",
+      "static const char quote[] = \"\\\"\\\\\"",
+      "imap_quote_string(dest, dlen, buf"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "execute arbitrary commands via backquote characters"
+    ]
+  },
+  {
+    "index": 1807,
+    "id": "CVE-2018-14354",
+    "commit_id": "95e80bf9ff10f68cb6443f760b85df4117cb15eb",
+    "added_lines": [
+      "size_t len = 0",
+      "len = snprintf(mbox, sizeof(mbox), \"%smailboxes \", subscribe ? \"\" : \"un\"",
+      "imap_quote_string(mbox + len, sizeof(mbox) - len, path, true"
+    ],
+    "removed_lines": [
+      "snprintf(mbox, sizeof(mbox), \"%smailboxes \\\"%s\\\"\", subscribe ? \"\" : \"un\", path"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "execute arbitrary commands via backquote characters"
+    ]
+  },
+  {
+    "index": 1894,
+    "id": "CVE-2018-10199",
+    "commit_id": "b51b21fc63c9805862322551387d9036f2b63433",
+    "added_lines": [
+      "fptr_orig = io_get_open_fptr(mrb, orig"
+    ],
+    "removed_lines": [
+      "fptr_orig = io_get_open_fptr(mrb, orig"
+    ],
+    "cause": [
+      "Memory Management"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "use-after-free"
+    ]
+  },
+  {
+    "index": 1943,
+    "id": "CVE-2018-6360",
+    "commit_id": "e6e6b0dcc7e9b0dbf35154a179b3dc1fcfcaff43",
+    "added_lines": [
+      "function Set (t",
+      "local set =",
+      "for _, v in pairs(t) do set[v] = true end",
+      "return set",
+      "end",
+      "local safe_protos = Set",
+      "\"http\", \"https\", \"ftp\", \"ftps\",",
+      "\"rtmp\", \"rtmps\", \"rtmpe\", \"rtmpt\", \"rtmpts\", \"rtmpte\",",
+      "\"data\"",
+      "if not url_is_safe(join_url(base, fragment)) then",
+      "return nil",
+      "end",
+      "local function url_is_safe(url",
+      "local proto = type(url) == \"string\" and url:match(\"^(.+)://\") or nil",
+      "local safe = proto and safe_protos[proto]",
+      "if not safe then",
+      "msg.error((\"Ignoring potentially unsafe url: '%s'\"):format(url",
+      "end",
+      "return safe",
+      "end",
+      "elseif not url_is_safe(mpd_url) then",
+      "return",
+      "local url = edl_track or track.url",
+      "if not url_is_safe(url) then",
+      "return",
+      "end",
+      "url, \"auto\",",
+      "streamurl = url",
+      "streamurl = streamurl:gsub(\"^data:\", \"data://\", 1",
+      "if not url_is_safe(streamurl) then",
+      "return",
+      "end",
+      "mp.set_property(\"stream-open-filename\", streamurl",
+      "-- links with only youtube id as returned by --flat-playlist",
+      "if not site:find(\"://\") then",
+      "table.insert(playlist, \"ytdl://\" .. site",
+      "elseif url_is_safe(site) then",
+      "table.insert(playlist, site",
+      "if #playlist > 0 then",
+      "mp.set_property(\"stream-open-filename\", \"memory://\" .. table.concat(playlist, \"\\n\"",
+      "end"
+    ],
+    "removed_lines": [
+      "edl_track or track.url, \"auto\",",
+      "streamurl = edl_track or track.url",
+      "mp.set_property(\"stream-open-filename\", streamurl:gsub(\"^data:\", \"data://\", 1",
+      "if not (site:find(\"https?://\") == 1) then",
+      "site = \"ytdl://\" .. site",
+      "table.insert(playlist, site",
+      "mp.set_property(\"stream-open-filename\", \"memory://\" .. table.concat(playlist, \"\\n\""
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "RETURN",
+      "CONTROL_FLOW",
+      "RETURN",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN",
+      "FUNC_CALL",
+      "RETURN",
+      "CONTROL_FLOW",
+      "RETURN",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "RETURN",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "does not consider that youtube-dl can provide a potentially unsafe URL."
+    ]
+  },
+  {
+    "index": 2001,
+    "id": "CVE-2017-18190",
+    "commit_id": "afa80cb2b457bf8d64f775bed307588610476c41",
+    "added_lines": [],
+    "removed_lines": [
+      "#ifdef __linux",
+      "!_cups_strcasecmp(con->clientname, \"localhost.localdomain\") ||",
+      "#endif"
+    ],
+    "cause": [
+      "Uncategorized"
+    ],
+    "effect": "ExecCode",
+    "score": 5.0,
+    "safe_features": [],
+    "unsafe_features": [
+      "NO_OP",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unknown"
+    ]
+  },
+  {
+    "index": 2071,
+    "id": "CVE-2019-16718",
+    "commit_id": "dd739f5a45b3af3d1f65f00fe19af1dbfec7aea7",
+    "added_lines": [
+      "char op0 = 0",
+      "op0 = *q",
+      "cmd = p"
+    ],
+    "removed_lines": [
+      "cmd = p + 1"
+    ],
+    "cause": [
+      "Configuration or Permissions Errors",
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 5"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP",
+      "POINTER_OP",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "permissions",
+      "improper handling of symbol names embedded in executables",
+      "command injection vulnerability",
+      "improper handling of symbol names embedded in executables"
+    ]
+  },
+  {
+    "index": 2161,
+    "id": "CVE-2019-12816",
+    "commit_id": "8de9e376ce531fe7f3c8b0aa4876d15b479b7311",
+    "added_lines": [
+      "bool CModules::ValidateModuleName(const CString& sModule, CString& sRetMsg)",
+      "for (unsigned int a = 0; a < sModule.length(); a++)",
+      "if (((sModule[a] < '0') || (sModule[a] > '9')) &&",
+      "((sModule[a] < 'a') || (sModule[a] > 'z')) &&",
+      "((sModule[a] < 'A') || (sModule[a] > 'Z')) && (sModule[a] != '_'))",
+      "sRetMsg =",
+      "t_f(\"Module names can only contain letters, numbers and \"",
+      "\"underscores, [{1}] is invalid\")(sModule",
+      "return false",
+      "return true",
+      "if (!ValidateModuleName(sModule, sRetMsg))",
+      "return false",
+      "if (!ValidateModuleName(sModule, sRetMsg))",
+      "return false",
+      "if (!ValidateModuleName(sModule, sRetMsg))",
+      "return false",
+      "if (!ValidateModuleName(sModule, sRetMsg))",
+      "return nullptr"
+    ],
+    "removed_lines": [
+      "for (unsigned int a = 0; a < sModule.length(); a++)",
+      "if (((sModule[a] < '0') || (sModule[a] > '9')) &&",
+      "((sModule[a] < 'a') || (sModule[a] > 'z')) &&",
+      "((sModule[a] < 'A') || (sModule[a] > 'Z')) && (sModule[a] != '_'))",
+      "sRetMsg =",
+      "t_f(\"Module names can only contain letters, numbers and \"",
+      "\"underscores, [{1}] is invalid\")(sModule",
+      "return nullptr"
+    ],
+    "cause": [
+      "Uncategorized"
+    ],
+    "effect": "ExecCode",
+    "score": 6.5,
+    "safe_features": [
+      "FUNC_CALL",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "RETURN",
+      "RETURN",
+      "CONTROL_FLOW",
+      "RETURN",
+      "CONTROL_FLOW",
+      "RETURN",
+      "CONTROL_FLOW",
+      "RETURN",
+      "CONTROL_FLOW",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "RETURN"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unknown"
+    ]
+  },
+  {
+    "index": 2165,
+    "id": "CVE-2019-12439",
+    "commit_id": "efc89e3b939b4bde42c10f065f6b7b02958ed50e",
+    "added_lines": [
+      "const char *base_path = NULL",
+      "base_path = \"/tmp\""
+    ],
+    "removed_lines": [
+      "cleanup_free char *base_path = NULL",
+      "We first try in /run, and if that fails, try in /tmp. */",
+      "base_path = xasprintf (\"/run/user/%d/.bubblewrap\", real_uid",
+      "if (ensure_dir (base_path, 0755",
+      "free (base_path",
+      "base_path = xasprintf (\"/tmp/.bubblewrap-%d\", real_uid",
+      "if (ensure_dir (base_path, 0755",
+      "die_with_error (\"Creating root mountpoint failed\""
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 4.6,
+    "safe_features": [
+      "POINTER_OP",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "POINTER_OP",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "MEM_FREE",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "misuses temporary directories"
+    ]
+  },
+  {
+    "index": 2208,
+    "id": "CVE-2019-10061",
+    "commit_id": "81a4b8620188e89f7e4fc985f3c89b58d4bcc86b",
+    "added_lines": [
+      "var flag = \"--exists\"",
+      "var opencv = process.env.PKG_CONFIG_OPENCV3 === \"1\" ? \"opencv3\" : ' \"opencv >= 2.3.1\"'",
+      "throw new Error(\"ERROR: failed to run: pkg-config\" + opencv + \" \" + flag + \" - Is OpenCV installed?\""
+    ],
+    "removed_lines": [
+      "var flag = process.argv[2] || \"--exists\"",
+      "var opencv = process.env.PKG_CONFIG_OPENCV3 === \"1\" ? \"opencv3\" : '\"opencv >= 2.3.1\"'",
+      "throw new Error(\"ERROR: failed to run: pkg-config\", opencv, flag"
+    ],
+    "cause": [
+      "Improper Input Validation"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "does not validate user input"
+    ]
+  },
+  {
+    "index": 2213,
+    "id": "CVE-2019-9003",
+    "commit_id": "77f8269606bf95fcb232ee86f6da80886f1dfae8",
+    "added_lines": [
+      "cleanup_srcu_struct(&user->release_barrier"
+    ],
+    "removed_lines": [
+      "cleanup_srcu_struct(&user->release_barrier"
+    ],
+    "cause": [
+      "Memory Management"
+    ],
+    "effect": "ExecCode",
+    "score": 7.8,
+    "safe_features": [
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "use-after-free"
+    ]
+  },
+  {
+    "index": 2227,
+    "id": "CVE-2019-3817",
+    "commit_id": "e3a5d056633677959ad924a51758876d415e7046",
+    "added_lines": [],
+    "removed_lines": [
+      "char added"
+    ],
+    "cause": [
+      "Memory Management"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [],
+    "unsafe_features": [
+      "NO_OP"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "use-after-free"
+    ]
+  },
+  {
+    "index": 2288,
+    "id": "CVE-2017-18509",
+    "commit_id": "99253eb750fda6a644d5188fb26c43bad8d5a745",
+    "added_lines": [
+      "if (sk->sk_type != SOCK_RAW ||",
+      "inet_sk(sk)->inet_num != IPPROTO_ICMPV6",
+      "return -EOPNOTSUPP",
+      "if (sk->sk_type != SOCK_RAW ||",
+      "inet_sk(sk)->inet_num != IPPROTO_ICMPV6",
+      "return -EOPNOTSUPP"
+    ],
+    "removed_lines": [
+      "if (sk->sk_type != SOCK_RAW ||",
+      "inet_sk(sk)->inet_num != IPPROTO_ICMPV6",
+      "return -EOPNOTSUPP"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.2,
+    "safe_features": [
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "This occurs because sk_type and protocol are not checked"
+    ]
+  },
+  {
+    "index": 2296,
+    "id": "CVE-2016-7398",
+    "commit_id": "17137d4ab1ce81a2cee0fae842340a344ef3da83",
+    "added_lines": [
+      "if (Z_TYPE_PP(test_ptr) == IS_ARRAY && Z_TYPE_PP(ptr) == IS_ARRAY)"
+    ],
+    "removed_lines": [
+      "if (Z_TYPE_PP(test_ptr) == IS_ARRAY)"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "CONTROL_FLOW"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "type confusion",
+      "type confusion"
+    ]
+  },
+  {
+    "index": 2390,
+    "id": "CVE-2017-14604",
+    "commit_id": "bc919205bf774f6af3fa7154506c46039af5a69b",
+    "added_lines": [
+      "AC_INIT([nautilus],[3.23.90],[http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus]"
+    ],
+    "removed_lines": [
+      "AC_INIT([nautilus],[3.22.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus]"
+    ],
+    "cause": [
+      "Uncategorized Cluster 8"
+    ],
+    "effect": "ExecCode",
+    "score": 4.0,
+    "safe_features": [
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "file type"
+    ]
+  },
+  {
+    "index": 2391,
+    "id": "CVE-2017-14500",
+    "commit_id": "26f5a4350f3ab5507bb8727051c87bb04660f333",
+    "added_lines": [
+      "fn.append(utils::replace_all(base, \"'\", \"%27\""
+    ],
+    "removed_lines": [
+      "fn.append(base"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 2409,
+    "id": "CVE-2017-12847",
+    "commit_id": "3baffa78bafebbbdf9f448890ba5a952ea2d73cb",
+    "added_lines": [
+      "[sets path for lock file (default: /run/nagios.lock)]),",
+      "lockfile=/run/nagios.lock"
+    ],
+    "removed_lines": [
+      "[sets path and file name for lock file]),",
+      "lockfile=$localstatedir/nagios.lock"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.3,
+    "safe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "leveraging access to this non-root account for nagios.lock modification before a root script executes a *kill `cat /pathname/nagios.lock`* command"
+    ]
+  },
+  {
+    "index": 2477,
+    "id": "CVE-2018-17456",
+    "commit_id": "1a7fd1fb2998002da6e9ff2ee46e1bdd25ee8404",
+    "added_lines": [
+      "test_expect_success 'fsck rejects unprotected dash' '",
+      "test_when_finished \"rm -rf dst\" &&",
+      "git init --bare dst &&",
+      "git -C dst config transfer.fsckObjects true &&",
+      "test_must_fail git push dst HEAD 2>err &&",
+      "grep gitmodulesPath err",
+      "'"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "NO_OP",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 2496,
+    "id": "CVE-2019-16718",
+    "commit_id": "5411543a310a470b1257fb93273cdd6e8dfcb3af",
+    "added_lines": [
+      "case '\"':",
+      "case '\\\\':",
+      "char ch = *arg",
+      "switch (ch)",
+      "case '=':",
+      "r_cons_printf (\"\\\"k bin/pe/%s/%d=%s.%s\\\"\\n\",",
+      "r_cons_printf (\"\\\"k bin/pe/%s/%d=%s\\\"\\n\","
+    ],
+    "removed_lines": [
+      "switch (*arg)",
+      "r_cons_printf (\"k bin/pe/%s/%d=%s.%s\\n\",",
+      "r_cons_printf (\"k bin/pe/%s/%d=%s\\n\","
+    ],
+    "cause": [
+      "Configuration or Permissions Errors",
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 5"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "permissions",
+      "improper handling of symbol names embedded in executables",
+      "command injection vulnerability",
+      "improper handling of symbol names embedded in executables"
+    ]
+  },
+  {
+    "index": 2533,
+    "id": "CVE-2019-10061",
+    "commit_id": "aaece6921d7368577511f06c94c99dd4e9653563",
+    "added_lines": [
+      "var flags =",
+      "'--cflags' : '--cflags',",
+      "'--libs' : '--libs'",
+      "var flag = flags[process.argv[2]] || '--exists'"
+    ],
+    "removed_lines": [
+      "var flag = \"--exists\""
+    ],
+    "cause": [
+      "Improper Input Validation"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "NO_OP",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "does not validate user input"
+    ]
+  },
+  {
+    "index": 3140,
+    "id": "CVE-2011-1300",
+    "commit_id": "b3ae5db129f88dae153880e84bdabea8ce2ca89b",
+    "added_lines": [
+      "class KeyboardLibrary",
+      "KeyboardLibrary* GetKeyboardLibrary"
+    ],
+    "removed_lines": [
+      "class KeyboardLibrary",
+      "KeyboardLibrary* GetKeyboardLibrary"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "NO_OP",
+      "POINTER_OP",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "POINTER_OP",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unspecified vectors"
+    ]
+  },
+  {
+    "index": 3141,
+    "id": "CVE-2011-1301",
+    "commit_id": "514f93279494ec4448b34a7aeeff27eccaae983f",
+    "added_lines": [],
+    "removed_lines": [
+      "# http://crbug.com/73740",
+      "UNINITIALIZED READ",
+      "ntdll.dll!wcslen",
+      "KERNEL32.dll!lstrlenW"
+    ],
+    "cause": [
+      "Memory Management",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [],
+    "unsafe_features": [
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unknown vectors",
+      "use-after-free"
+    ]
+  },
+  {
+    "index": 3181,
+    "id": "CVE-2012-5112",
+    "commit_id": "7bc64304a46b76928da4149693bb4e60907e54c8",
+    "added_lines": [],
+    "removed_lines": [
+      "void OnSetTcmallocHeapProfiling(bool profiling, const std::string& prefix",
+      "void OnWriteTcmallocHeapProfile(const FilePath::StringType& filename"
+    ],
+    "cause": [
+      "Memory Management",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [],
+    "unsafe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "use-after-free",
+      "unspecified vectors"
+    ]
+  },
+  {
+    "index": 3182,
+    "id": "CVE-2012-5112",
+    "commit_id": "d65b01ca819881a507b5e60c25a2f9caff58cd57",
+    "added_lines": [
+      "void DidGetAvailableSpace(const AvailableSpaceCallback& callback,",
+      "int64 space"
+    ],
+    "removed_lines": [
+      "class AvailableSpaceQueryTask"
+    ],
+    "cause": [
+      "Memory Management",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "NO_OP"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "use-after-free",
+      "unspecified vectors"
+    ]
+  },
+  {
+    "index": 3205,
+    "id": "CVE-2012-5108",
+    "commit_id": "6d2aef28cb0b677af468ebf3e32a176a7c37086e",
+    "added_lines": [
+      "TEST_F(AudioOutputDeviceTest, DISABLED_StopBeforeRender)"
+    ],
+    "removed_lines": [
+      "TEST_F(AudioOutputDeviceTest, StopBeforeRender)"
+    ],
+    "cause": [
+      "Race Condition or Concurrency"
+    ],
+    "effect": "ExecCode",
+    "score": 9.3,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "race condition"
+    ]
+  },
+  {
+    "index": 3318,
+    "id": "CVE-2011-3961",
+    "commit_id": "b712795852f9d6073e062680e280634290c4ba5d",
+    "added_lines": [
+      ", m_normalizedBufferLength(0",
+      ", m_padding(0",
+      ", m_padPerWordBreak(0",
+      ", m_padError(0"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Race Condition or Concurrency"
+    ],
+    "effect": "ExecCode",
+    "score": 9.3,
+    "safe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "race condition"
+    ]
+  },
+  {
+    "index": 3343,
+    "id": "CVE-2011-3108",
+    "commit_id": "9f4633c617ef393ba4709cba7d8fa23101b64025",
+    "added_lines": [
+      "Context* pending = new Context",
+      "EXPECT_EQ(net::OK, cache.http_cache()->CreateTransaction(&pending->trans",
+      "EXPECT_EQ(net::ERR_IO_PENDING,",
+      "pending->trans->Start(&request, pending->callback.callback(),",
+      "net::BoundNetLog",
+      "delete pending",
+      "EXPECT_EQ(2, cache.disk_cache()->create_count"
+    ],
+    "removed_lines": [
+      "EXPECT_EQ(1, cache.disk_cache()->create_count",
+      "disk_cache::Entry* entry",
+      "EXPECT_FALSE(cache.OpenBackendEntry(kRangeGET_TransactionOK.url, &entry"
+    ],
+    "cause": [
+      "Memory Management"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "POINTER_OP",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "use-after-free"
+    ]
+  },
+  {
+    "index": 3385,
+    "id": "CVE-2011-3046",
+    "commit_id": "8a1b329c314a90e199b7b6b516a8edc2dfecc065",
+    "added_lines": [
+      "bug_109863",
+      "ThreadSanitizer:Race",
+      "...",
+      "fun:ChromeBrowserMainParts::SetupFieldTrials",
+      "fun:ChromeBrowserMainParts::SetupMetricsAndFieldTrials",
+      "fun:ChromeBrowserMainParts::PreMainMessageLoopRunImpl",
+      "fun:ChromeBrowserMainParts::PreMainMessageLoopRun",
+      "fun:content::BrowserMainLoop::RunMainMessageLoopParts",
+      "fun:BrowserMain"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode XSS",
+    "score": 10.0,
+    "safe_features": [
+      "NO_OP"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code XSS ",
+    "summary": [
+      "xss"
+    ]
+  },
+  {
+    "index": 3386,
+    "id": "CVE-2011-3046",
+    "commit_id": "67e38708af8e99569365326e378b806088c83f5a",
+    "added_lines": [
+      "const char kUnreachableWebDataURL[] = \"data:text/html,chromewebdata\""
+    ],
+    "removed_lines": [
+      "const char kUnreachableWebDataURL[] = \"chrome://chromewebdata/\""
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode XSS",
+    "score": 10.0,
+    "safe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code XSS ",
+    "summary": [
+      "xss"
+    ]
+  },
+  {
+    "index": 3402,
+    "id": "CVE-2013-2931",
+    "commit_id": "b0ddebe2ea0b00c272af7820b9c108c4438f5b88",
+    "added_lines": [
+      "'audio/audio_unittest_util.cc',",
+      "'audio/audio_unittest_util.h',"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "Multiple unspecified vulnerabilities",
+      "unknown vectors"
+    ]
+  },
+  {
+    "index": 3449,
+    "id": "CVE-2013-2870",
+    "commit_id": "ca8cc70b2de822b939f87effc7c2b83bac280a44",
+    "added_lines": [
+      ": NON_EXPORTED_BASE(public base::NonThreadSafe)"
+    ],
+    "removed_lines": [
+      ": NON_EXPORTED_BASE(public base::NonThreadSafe),",
+      "public base::SupportsWeakPtr<URLRequestContext>"
+    ],
+    "cause": [
+      "Memory Management"
+    ],
+    "effect": "ExecCode",
+    "score": 9.3,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "use-after-free"
+    ]
+  },
+  {
+    "index": 3487,
+    "id": "CVE-2013-0889",
+    "commit_id": "1538367452b549d929aabb13d54c85ab99f65cd3",
+    "added_lines": [
+      "if (danger_level == download_util::AllowOnUserGesture)",
+      "if (download.GetTransitionType() &",
+      "content::PAGE_TRANSITION_FROM_ADDRESS_BAR)",
+      "return false"
+    ],
+    "removed_lines": [
+      "if (download.GetTransitionType() & content::PAGE_TRANSITION_FROM_ADDRESS_BAR",
+      "return false",
+      "if (danger_level == download_util::AllowOnUserGesture"
+    ],
+    "cause": [
+      "Parsing or Interpretation Errors"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "CONTROL_FLOW",
+      "CONTROL_FLOW",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "RETURN",
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "does not properly enforce a user gesture requirement before proceeding with a file download"
+    ]
+  },
+  {
+    "index": 3519,
+    "id": "CVE-2013-0912",
+    "commit_id": "faceb51d5058e1159835a4b0cd65081bb0a9de1e",
+    "added_lines": [],
+    "removed_lines": [
+      "BLINK_EXPORT static void enableSpeechSynthesis(bool"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "type confusion",
+      "type confusion"
+    ]
+  },
+  {
+    "index": 3571,
+    "id": "CVE-2014-0574",
+    "commit_id": "dd84f83120d1ea13b61d3551f6b8134dde933f5d",
+    "added_lines": [
+      "this._pendingStopTimer = setTimeout(this._stopFilmStripRecording.bind(this), 1000",
+      "},",
+      "_stopFilmStripRecording: function",
+      "this._filmStripRecorder.stopRecording(this._filmStripAvailable.bind(this",
+      "delete this._pendingStopTimer"
+    ],
+    "removed_lines": [
+      "this._pendingStopTimer = setTimeout(this._toggleRecord.bind(this, false), 1000"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 7"
+    ],
+    "effect": "ExecCode",
+    "score": 10.0,
+    "safe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "double free",
+      "unspecified vectors"
+    ]
+  },
+  {
+    "index": 3748,
+    "id": "CVE-2015-1274",
+    "commit_id": "d27468a832d5316884bd02f459cbf493697fd7e1",
+    "added_lines": [
+      "if (equalIgnoringASCIICase(pressedAttr, \"mixed\""
+    ],
+    "removed_lines": [
+      "if (equalIgnoringCase(pressedAttr, \"mixed\""
+    ],
+    "cause": [
+      "Uncategorized Cluster 8",
+      "Uncategorized Cluster 8"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "CONTROL_FLOW"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "file type",
+      "does not ensure that the auto-open list omits all dangerous file types"
+    ]
+  },
+  {
+    "index": 3815,
+    "id": "CVE-2015-1233",
+    "commit_id": "31b81d4cf8b6a063391839816c82fc61c8272e53",
+    "added_lines": [
+      "-ScreenLayoutObserverTest.RotationNotification"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 7.5,
+    "safe_features": [
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "unspecified vectors"
+    ]
+  },
+  {
+    "index": 3948,
+    "id": "CVE-2017-5116",
+    "commit_id": "acf2f0799f6f732dd70f45ddd252d773be7afd11",
+    "added_lines": [
+      "constexpr char kInternalExtension[] = \"InternalExtension\"",
+      "constexpr char kInternalViewSource[] = \"InternalViewSource\"",
+      "const GURL internal_extension_url(\"chrome-extension://example\"",
+      "if (name == kInternal)",
+      "} else if (name == kInternalExtension)",
+      "url = internal_extension_url",
+      "} else if (name == kInternalViewSource)",
+      "constexpr char kTestHtml[] = \"/viewsource/test.html\"",
+      "ASSERT_TRUE(embedded_test_server()->Start",
+      "url = GURL(content::kViewSourceScheme +",
+      "std::string(url::kStandardSchemeSeparator) +",
+      "embedded_test_server()->GetURL(kTestHtml).spec",
+      "if (name != kInsecure && name.find(kInternal) == std::string::npos)",
+      "IN_PROC_BROWSER_TEST_F(PageInfoBubbleViewBrowserTest,",
+      "InvokeDialog_InternalExtension)",
+      "RunDialog",
+      "IN_PROC_BROWSER_TEST_F(PageInfoBubbleViewBrowserTest,",
+      "InvokeDialog_InternalViewSource)",
+      "RunDialog"
+    ],
+    "removed_lines": [
+      "if (name == kInternal",
+      "if (name != kInsecure && name != kInternal)"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "ARRAY_ACCESS",
+      "ARRAY_ACCESS",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "ARRAY_ACCESS",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "Type confusion in V8",
+      "type confusion",
+      "type confusion"
+    ]
+  },
+  {
+    "index": 3988,
+    "id": "CVE-2017-5059",
+    "commit_id": "5646013c52faca22cea07b750d42910f5ff9fe29",
+    "added_lines": [
+      "# COMPONENT: OS>Kernel>Camera"
+    ],
+    "removed_lines": [
+      "shenghao@chromium.org",
+      "# COMPONENT: OS>Kernel>Camera"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP"
+    ],
+    "unsafe_features": [
+      "NO_OP"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "type confusion",
+      "code execution",
+      "type confusion"
+    ]
+  },
+  {
+    "index": 4003,
+    "id": "CVE-2017-5053",
+    "commit_id": "5c895ed26b096468eea6baa6584f2df65905b76b",
+    "added_lines": [
+      "WebInputElement username_element",
+      "WebInputElement password_element",
+      "PasswordInfo* password_info = nullptr",
+      "if (!element ||",
+      "!FindPasswordInfoForElement(*element, &username_element,",
+      "&password_element, &password_info))"
+    ],
+    "removed_lines": [
+      "if (!element || (!base::Contains(web_input_to_password_info_, *element) &&",
+      "!base::Contains(password_to_username_, *element)))"
+    ],
+    "cause": [
+      "Memory Management",
+      "Memory Management"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "CONTROL_FLOW",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "out-of-bounds",
+      "out-of-bounds read"
+    ]
+  },
+  {
+    "index": 4037,
+    "id": "CVE-2017-5020",
+    "commit_id": "7cdda4ea0003b72f72dc1ad5317d4ca694709691",
+    "added_lines": [],
+    "removed_lines": [],
+    "cause": [
+      "Parsing or Interpretation Errors"
+    ],
+    "effect": "ExecCode XSS",
+    "score": 4.3,
+    "safe_features": [],
+    "unsafe_features": [],
+    "vuln": "Exec Code XSS ",
+    "summary": [
+      "failed to require a user gesture for powerful download operations"
+    ]
+  },
+  {
+    "index": 4045,
+    "id": "CVE-2016-9651",
+    "commit_id": "53f3de7e60280b543b7c12b0907edacd3f401b5e",
+    "added_lines": [
+      "private Bitmap mBitmap",
+      "assert mBitmap != null : \"StaticResource#getBitmap can only be called once per lifecycle\"",
+      "Bitmap bitmap = mBitmap",
+      "mBitmap = null",
+      "return bitmap"
+    ],
+    "removed_lines": [
+      "private final Bitmap mBitmap",
+      "return mBitmap"
+    ],
+    "cause": [
+      "Uncategorized Cluster 8"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "RETURN"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "A missing check for whether a property of a JS object is private in V8"
+    ]
+  },
+  {
+    "index": 4047,
+    "id": "CVE-2016-5207",
+    "commit_id": "1a19cc515f4bf99319b102620a61eac936507cc7",
+    "added_lines": [
+      "'Win10 FYI Release (NVIDIA GeForce GTX 1660)',"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode XSS",
+    "score": 4.3,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code XSS ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 4075,
+    "id": "CVE-2016-5198",
+    "commit_id": "cc7aad3f6b3d6ad7f9a4b1b4f8e983e0eec7bdb6",
+    "added_lines": [
+      "bool DecodeFailed() const",
+      "MutexLocker lock(generator_mutex_",
+      "return decode_failed_",
+      "mutable Mutex generator_mutex_"
+    ],
+    "removed_lines": [
+      "bool DecodeFailed() const { return decode_failed_;",
+      "Mutex generator_mutex_"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "NO_OP"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "code execution"
+    ]
+  },
+  {
+    "index": 4152,
+    "id": "CVE-2018-6085",
+    "commit_id": "df5b1e1f88e013bc96107cc52c4a4f33a8238444",
+    "added_lines": [
+      "backend_->OnSyncBackendOpComplete"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "Re-entry of a destructor in Networking Disk Cache"
+    ]
+  },
+  {
+    "index": 4153,
+    "id": "CVE-2018-6086",
+    "commit_id": "c9d673b54832afde658f214d7da7d0453fa89774",
+    "added_lines": [
+      "do",
+      "entry = entry->next",
+      "} while (entry != lru_list_.end() && entry->value()->parent() == to_doom"
+    ],
+    "removed_lines": [
+      "entry = entry->next"
+    ],
+    "cause": [
+      "Uncategorized Cluster 7"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "double-eviction"
+    ]
+  },
+  {
+    "index": 4154,
+    "id": "CVE-2018-6088",
+    "commit_id": "94b3728a2836da335a10085d4089c9d8e1c9d225",
+    "added_lines": [
+      "std::vector<int> visible_pages_copy(visible_pages_",
+      "for (int page_index : visible_pages_copy)"
+    ],
+    "removed_lines": [
+      "for (int page_index : visible_pages_)"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "FUNC_CALL",
+      "CONTROL_FLOW"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "An iterator-invalidation bug in PDFium"
+    ]
+  },
+  {
+    "index": 4165,
+    "id": "CVE-2018-6101",
+    "commit_id": "ba1513223e47b62ed53b61518b7f7b82ad1d8ccd",
+    "added_lines": [
+      "#include \"net/base/url_util.h\"",
+      "bool RequestIsSafeToServe(const net::HttpServerRequestInfo& info)",
+      "std::string header = info.headers[\"host\"]",
+      "if (header.empty",
+      "return true",
+      "GURL url = GURL(\"http://\" + header",
+      "return url.HostIsIPAddress() || net::IsLocalHostname(url.host(), nullptr",
+      "if (!RequestIsSafeToServe(info))",
+      "Send500(connection_id,",
+      "\"Host header is specified and is not an IP address or localhost.\"",
+      "return"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 1"
+    ],
+    "effect": "ExecCode",
+    "score": 5.1,
+    "safe_features": [
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARRAY_ACCESS",
+      "CONTROL_FLOW",
+      "RETURN",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN",
+      "CONTROL_FLOW",
+      "FUNC_CALL",
+      "RETURN"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "A lack of host validation in DevTools"
+    ]
+  },
+  {
+    "index": 4174,
+    "id": "CVE-2018-6111",
+    "commit_id": "3c8e4852477d5b1e2da877808c998dc57db9460f",
+    "added_lines": [],
+    "removed_lines": [
+      "class RenderProcessHost",
+      "RenderProcessHost* GetProcess"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [],
+    "unsafe_features": [
+      "NO_OP",
+      "POINTER_OP",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "An object lifetime issue in the developer tools network handler"
+    ]
+  },
+  {
+    "index": 4203,
+    "id": "CVE-2017-15407",
+    "commit_id": "a96567f02a0881561c964e5c11afe9c1af17a5f7",
+    "added_lines": [
+      "EXPECT_EQ(QUIC_INTERNAL_ERROR,",
+      "buffer_->OnStreamData(static_cast<QuicStreamOffset>(-1), source,",
+      "clock_.ApproximateNow(), &written,",
+      "&error_details_",
+      "EXPECT_TRUE(helper_->CheckBufferInvariants",
+      "source = \"bbb\"",
+      "EXPECT_EQ(QUIC_INTERNAL_ERROR,",
+      "buffer_->OnStreamData(static_cast<QuicStreamOffset>(-2), source,",
+      "clock_.ApproximateNow(), &written,",
+      "&error_details_",
+      "EXPECT_TRUE(helper_->CheckBufferInvariants"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Memory Management",
+      "Memory Management",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "out-of-bounds",
+      "out-of-bounds write",
+      "code execution"
+    ]
+  },
+  {
+    "index": 4269,
+    "id": "CVE-2019-5819",
+    "commit_id": "0745e0e497bd0c9fd422c824eca50e91abe333c5",
+    "added_lines": [
+      "cURL Unix: curl 'http://example.org/path' -H 'Content-Type: application/binary' --data-binary $'1234\\r\\n00\\u02\\u03\\u04\\u05\\'\"\\u21' --compressed",
+      "cURL Unix: curl 'http://example.org/path' -H 'Content-Type: application/binary' --data-binary $'1234\\r\\n\\u0100\\u02\\u03\\u04\\u05\\'\"\\u21' --compressed",
+      "cURL Unix: curl 'http://example.org/path' -H 'Content-Type: application/binary' --data-binary $'%OS%\\r\\n%%OS%%\\r\\n\"\\\\\"\\'$&\\u21' --compressed",
+      "cURL Unix: curl 'http://example.org/path' -H 'Content-Type: application/binary' --data-binary $'\\u21@#$%^&*()_+~`1234567890-=[]{};\\':\",./\\r<>?\\r\\nqwer\\nt\\n\\nyuiopasdfghjklmnbvcxzQWERTYUIOPLKJHGFDSAZXCVBNM' --compressed"
+    ],
+    "removed_lines": [
+      "cURL Unix: curl 'http://example.org/path' -H 'Content-Type: application/binary' --data-binary $'1234\\r\\n00\\u02\\u03\\u04\\u05\\'\"!' --compressed",
+      "cURL Unix: curl 'http://example.org/path' -H 'Content-Type: application/binary' --data-binary $'1234\\r\\n\\u0100\\u02\\u03\\u04\\u05\\'\"!' --compressed",
+      "cURL Unix: curl 'http://example.org/path' -H 'Content-Type: application/binary' --data-binary $'%OS%\\r\\n%%OS%%\\r\\n\"\\\\\"\\'$&!' --compressed",
+      "cURL Unix: curl 'http://example.org/path' -H 'Content-Type: application/binary' --data-binary $'!@#$%^&*()_+~`1234567890-=[]{};\\':\",./\\r<>?\\r\\nqwer\\nt\\n\\nyuiopasdfghjklmnbvcxzQWERTYUIOPLKJHGFDSAZXCVBNM' --compressed"
+    ],
+    "cause": [
+      "Uncategorized Cluster 2"
+    ],
+    "effect": "ExecCode",
+    "score": 4.4,
+    "safe_features": [
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARRAY_ACCESS",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "insufficient data validation"
+    ]
+  },
+  {
+    "index": 4293,
+    "id": "CVE-2019-5756",
+    "commit_id": "5817b2f8c0d0e184e78bebb8b343688154df5856",
+    "added_lines": [
+      "'pdfium_revision': '1929d6e1d44ed9bd692c930d5cf79fb2bd80f1e6',"
+    ],
+    "removed_lines": [
+      "'pdfium_revision': '7c39bf7b87f871ccc50b66066c3bfb1883f66010',"
+    ],
+    "cause": [
+      "Uncategorized Cluster 5"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "NO_OP"
+    ],
+    "unsafe_features": [
+      "NO_OP"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "inappropriate memory management"
+    ]
+  },
+  {
+    "index": 4311,
+    "id": "CVE-2019-5774",
+    "commit_id": "b32471d5abb3b3a4fe56e1dd79871400b51a0cca",
+    "added_lines": [
+      "<int value=\"320\" label=\"desktop\"/>"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "Omission of the .desktop filetype from the Safe Browsing checklist in SafeBrowsing"
+    ]
+  },
+  {
+    "index": 4395,
+    "id": "CVE-2018-6139",
+    "commit_id": "46f5cfb6414c04b65cba4ec59ca992f338934fc9",
+    "added_lines": [
+      "if (!session->restricted())",
+      "session->AddHandler(base::WrapUnique",
+      "new protocol::TargetHandler(false"
+    ],
+    "removed_lines": [
+      "session->AddHandler",
+      "base::WrapUnique(new protocol::TargetHandler(false"
+    ],
+    "cause": [
+      "Uncategorized Cluster 2"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "ARITHMETIC",
+      "FUNC_CALL"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "insufficient target checks"
+    ]
+  },
+  {
+    "index": 4396,
+    "id": "CVE-2018-6140",
+    "commit_id": "2aec794f26098c7a361c27d7c8f57119631cca8a",
+    "added_lines": [
+      "MOCK_METHOD1(AttachRestrictedClient,",
+      "bool(content::DevToolsAgentHostClient* client"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Uncategorized Cluster 1"
+    ],
+    "effect": "ExecCode",
+    "score": 9.3,
+    "safe_features": [
+      "FUNC_CALL",
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Exec Code ",
+    "summary": [
+      "Allowing the chrome.debugger API to attach to Web UI pages in DevTools"
+    ]
+  },
+  {
+    "index": 4404,
+    "id": "CVE-2018-6118",
+    "commit_id": "9ab771022535b499e4d7a7f12fa6c60a294f7de4",
+    "added_lines": [
+      "base::LinkNode<MemEntryImpl>* NextSkippingChildren",
+      "const base::LinkedList<MemEntryImpl>& lru_list,",
+      "base::LinkNode<MemEntryImpl>* node)",
+      "MemEntryImpl* cur = node->value",
+      "do",
+      "node = node->next",
+      "} while (node != lru_list.end() && node->value()->parent() == cur",
+      "return node",
+      "node = NextSkippingChildren(lru_list_, node",
+      "entry = NextSkippingChildren(lru_list_, entry"
+    ],
+    "removed_lines": [
+      "node = node->next",
+      "do",
+      "entry = entry->next",
+      "} while (entry != lru_list_.end() && entry->value()->parent() == to_doom"
+    ],
+    "cause": [
+      "Uncategorized Cluster 7"
+    ],
+    "effect": "ExecCode",
+    "score": 6.8,
+    "safe_features": [
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "POINTER_OP",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "RETURN",
+      "FUNC_CALL",
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "ARITHMETIC",
+      "ARITHMETIC",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code ",
+    "summary": [
+      "double-eviction"
+    ]
+  }
+]

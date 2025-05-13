@@ -1,0 +1,239 @@
+[
+  {
+    "index": 1245,
+    "id": "CVE-2017-9228",
+    "commit_id": "3b63d12038c8d8fc278e81c942fa9bec7c704c8b",
+    "added_lines": [
+      "if (*state != CCS_START"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Memory Management",
+      "Memory Management",
+      "Memory Management"
+    ],
+    "effect": "Mem. Corr.",
+    "score": 7.5,
+    "safe_features": [
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [],
+    "vuln": "Mem. Corr. ",
+    "summary": [
+      "out-of-bounds",
+      "out-of-bounds write",
+      "uninitialized variable"
+    ]
+  },
+  {
+    "index": 1247,
+    "id": "CVE-2017-9226",
+    "commit_id": "b4bf968ad52afe14e60a2dc8a95d3555c543353a",
+    "added_lines": [
+      "if (*vs > 0xff",
+      "return ONIGERR_INVALID_CODE_POINT_VALUE"
+    ],
+    "removed_lines": [],
+    "cause": [
+      "Memory Management",
+      "Memory Management"
+    ],
+    "effect": "Mem. Corr.",
+    "score": 7.5,
+    "safe_features": [
+      "POINTER_OP",
+      "CONTROL_FLOW",
+      "ARITHMETIC",
+      "RETURN"
+    ],
+    "unsafe_features": [],
+    "vuln": "Mem. Corr. ",
+    "summary": [
+      "out-of-bounds",
+      "out-of-bounds write"
+    ]
+  },
+  {
+    "index": 1904,
+    "id": "CVE-2018-9336",
+    "commit_id": "1394192b210cb3c6624a7419bcf3ff966742e79b",
+    "added_lines": [
+      "goto err",
+      "goto err",
+      "goto err",
+      "goto err",
+      "goto err",
+      "goto err",
+      "goto err",
+      "return TRUE",
+      "err:",
+      "sud->directory = NULL;",
+      "return FALSE"
+    ],
+    "removed_lines": [
+      "BOOL ret = FALSE",
+      "goto out",
+      "goto out",
+      "goto out",
+      "goto out",
+      "goto out",
+      "goto out",
+      "goto out",
+      "data = NULL;",
+      "ret = TRUE",
+      "out:",
+      "return ret"
+    ],
+    "cause": [
+      "Uncategorized Cluster 7"
+    ],
+    "effect": "Mem. Corr.",
+    "score": 4.6,
+    "safe_features": [
+      "NO_OP",
+      "RETURN",
+      "ARITHMETIC",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "NO_OP",
+      "RETURN"
+    ],
+    "vuln": "Mem. Corr. ",
+    "summary": [
+      "double-free"
+    ]
+  },
+  {
+    "index": 1910,
+    "id": "CVE-2018-8788",
+    "commit_id": "d1112c279bd1a327e8e4d0b5f371458bf2579659",
+    "added_lines": [
+      "static BOOL nsc_encode_sse2(NSC_CONTEXT* context, const BYTE* data,",
+      "return TRUE"
+    ],
+    "removed_lines": [
+      "static void nsc_encode_sse2(NSC_CONTEXT* context, const BYTE* data,"
+    ],
+    "cause": [
+      "Memory Management",
+      "Memory Management",
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "ExecCode Mem. Corr.",
+    "score": 7.5,
+    "safe_features": [
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC",
+      "RETURN"
+    ],
+    "unsafe_features": [
+      "POINTER_OP",
+      "FUNC_CALL",
+      "ARITHMETIC"
+    ],
+    "vuln": "Exec Code Mem. Corr. ",
+    "summary": [
+      "out-of-bounds",
+      "out-of-bounds write",
+      "code execution"
+    ]
+  },
+  {
+    "index": 2015,
+    "id": "CVE-2017-15129",
+    "commit_id": "21b5944350052d2583e82dd59b19a9ba94a007f0",
+    "added_lines": [
+      "peer = maybe_get_net(peer"
+    ],
+    "removed_lines": [
+      "get_net(peer"
+    ],
+    "cause": [
+      "Memory Management",
+      "Uncategorized Cluster 7"
+    ],
+    "effect": "Mem. Corr.",
+    "score": 4.9,
+    "safe_features": [
+      "FUNC_CALL"
+    ],
+    "unsafe_features": [
+      "FUNC_CALL"
+    ],
+    "vuln": "Mem. Corr. ",
+    "summary": [
+      "use-after-free",
+      "double free"
+    ]
+  },
+  {
+    "index": 2044,
+    "id": "CVE-2019-1010293",
+    "commit_id": "95f36d661f2b75887772ea28baaad904bde96970",
+    "added_lines": [
+      "uaddr_t end_addr = 0",
+      "if (ADD_OVERFLOW(uaddr, len, &end_addr",
+      "for (a = ROUNDDOWN(uaddr, addr_incr); a < end_addr; a += addr_incr)"
+    ],
+    "removed_lines": [
+      "if (ADD_OVERFLOW(uaddr, len, &a",
+      "for (a = uaddr; a < (uaddr + len); a += addr_incr)"
+    ],
+    "cause": [
+      "Uncategorized Cluster 3"
+    ],
+    "effect": "Mem. Corr.",
+    "score": 7.5,
+    "safe_features": [
+      "NO_OP",
+      "CONTROL_FLOW",
+      "CONTROL_FLOW",
+      "ARITHMETIC"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "CONTROL_FLOW",
+      "ARITHMETIC"
+    ],
+    "vuln": "Mem. Corr. ",
+    "summary": [
+      "boundary crossing"
+    ]
+  },
+  {
+    "index": 2422,
+    "id": "CVE-2017-9226",
+    "commit_id": "f015fbdd95f76438cd86366467bb2b39870dd7c6",
+    "added_lines": [
+      "if (num < 0 || num >= 256) return ONIGERR_TOO_BIG_NUMBER",
+      "if (num < 0 || num >= 256) return ONIGERR_TOO_BIG_NUMBER"
+    ],
+    "removed_lines": [
+      "if (num < 0) return ONIGERR_TOO_BIG_NUMBER",
+      "if (num < 0) return ONIGERR_TOO_BIG_NUMBER"
+    ],
+    "cause": [
+      "Memory Management",
+      "Memory Management"
+    ],
+    "effect": "Mem. Corr.",
+    "score": 7.5,
+    "safe_features": [
+      "CONTROL_FLOW",
+      "CONTROL_FLOW"
+    ],
+    "unsafe_features": [
+      "CONTROL_FLOW",
+      "CONTROL_FLOW"
+    ],
+    "vuln": "Mem. Corr. ",
+    "summary": [
+      "out-of-bounds",
+      "out-of-bounds write"
+    ]
+  }
+]
