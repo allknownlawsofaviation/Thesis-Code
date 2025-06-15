@@ -18,6 +18,9 @@ with open("cwe_with_features.json", 'r') as f:
 with open("data_with_features_2_2.json",'r') as f:
     data = json.load(f)
 
+for data['cwe_id'], i in data.items():
+    print(data['cwe_id'])
+
 
 def extract_tokens(code_line):
     token = re.findall(r'[a-zA-Z_][a-zA-Z0-9]*|\S', code_line)
@@ -51,6 +54,9 @@ def prepare_data2(cwe):
 
         }
         return data
+
+
+
 
 
 def prepare_data(cwe):
