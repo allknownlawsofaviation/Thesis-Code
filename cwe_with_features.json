@@ -1,0 +1,4022 @@
+[
+  {
+    "cwe_id": 189,
+    "title": "CWE CATEGORY: Numeric Errors",
+    "examples": []
+  },
+  {
+    "cwe_id": 94,
+    "title": "CWE-94: Improper Control of Generation of Code ('Code Injection')",
+    "examples": []
+  },
+  {
+    "cwe_id": 20,
+    "title": "CWE-20: Improper Input Validation",
+    "examples": [
+      {
+        "bad": [
+          "...",
+          "#define MAX_DIM 100",
+          "...",
+          "int m,n, error;",
+          "board_square_t *board;",
+          "printf(\"Please specify the board height: \\n\");",
+          "error = scanf(\"%d\", &m);",
+          "if ( EOF == error )",
+          "die(\"No integer passed: Die evil hacker!\\n\");",
+          "printf(\"Please specify the board width: \\n\");",
+          "error = scanf(\"%d\", &n);",
+          "if ( EOF == error )",
+          "die(\"No integer passed: Die evil hacker!\\n\");",
+          "if ( m > MAX_DIM || n > MAX_DIM ) ",
+          "die(\"Value too large: Die evil hacker!\\n\");",
+          "board = (board_square_t*) malloc( m * n * sizeof(board_square_t));",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 264,
+    "title": "CWE CATEGORY: Permissions, Privileges, and Access Controls",
+    "examples": []
+  },
+  {
+    "cwe_id": 399,
+    "title": "CWE CATEGORY: Resource Management Errors",
+    "examples": []
+  },
+  {
+    "cwe_id": 119,
+    "title": "CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer",
+    "examples": [
+      {
+        "bad": [
+          "void host_lookup(char *user_supplied_addr)",
+          "struct hostent *hp;",
+          "in_addr_t *addr;",
+          "char hostname[64];",
+          "in_addr_t inet_addr(const char *cp);",
+          "validate_addr_form(user_supplied_addr);",
+          "addr = inet_addr(user_supplied_addr);",
+          "hp = gethostbyaddr( addr, sizeof(struct in_addr), AF_INET);",
+          "strcpy(hostname, hp->h_name);"
+        ],
+        "good": [
+          "...",
+          "if (index >= 0 && index < len) ",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "SIZE_CHECK",
+          "MEM_COPY",
+          "POINTER_OP",
+          "ARITH_OP",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "char * copy_input(char *user_supplied_string)",
+          "int i, dst_index;",
+          "char *dst_buf = (char*)malloc(4*sizeof(char) * MAX_SIZE);",
+          "if ( MAX_SIZE <= strlen(user_supplied_string) )",
+          "die(\"user string too long, die evil hacker!\");",
+          "dst_index = 0;",
+          "for ( i = 0; i < strlen(user_supplied_string); i++ )",
+          "if( '&' == user_supplied_string[i] )",
+          "dst_buf[dst_index++] = '&';",
+          "dst_buf[dst_index++] = 'a';",
+          "dst_buf[dst_index++] = 'm';",
+          "dst_buf[dst_index++] = 'p';",
+          "dst_buf[dst_index++] = ';';",
+          "else if ('<' == user_supplied_string[i] )",
+          "else dst_buf[dst_index++] = user_supplied_string[i];",
+          "return dst_buf;"
+        ],
+        "good": [
+          "...",
+          "if (index >= 0 && index < len) ",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "CONDITIONAL",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "int main (int argc, char **argv) ",
+          "char *items[] = \"boat\", \"car\", \"truck\", \"train\";",
+          "int index = GetUntrustedOffset();",
+          "printf(\"You selected %s\\n\", items[index-1]);"
+        ],
+        "good": [
+          "...",
+          "if (index >= 0 && index < len) ",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "ARRAY_ACCESS",
+          "DEREF",
+          "ARITH_OP",
+          "INDEX_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "int getValueFromArray(int *array, int len, int index) ",
+          "int value;",
+          "if (index < len) ",
+          "value = array[index];",
+          "else ",
+          "printf(\"Value is: %d\\n\", array[index]);",
+          "value = -1;",
+          "return value;"
+        ],
+        "good": [
+          "...",
+          "if (index >= 0 && index < len) ",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "INDEX_OP",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARITH_OP",
+          "RETURN"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 362,
+    "title": "CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')",
+    "examples": [
+      {
+        "bad": [],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [
+          "void f(pthread_mutex_t *mutex) ",
+          "pthread_mutex_lock(mutex);",
+          "pthread_mutex_unlock(mutex);"
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 287,
+    "title": "CWE-287: Improper Authentication",
+    "examples": []
+  },
+  {
+    "cwe_id": 200,
+    "title": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
+    "examples": []
+  },
+  {
+    "cwe_id": 16,
+    "title": "CWE CATEGORY: Configuration",
+    "examples": []
+  },
+  {
+    "cwe_id": 310,
+    "title": "CWE CATEGORY: Cryptographic Issues",
+    "examples": []
+  },
+  {
+    "cwe_id": 89,
+    "title": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+    "examples": [
+      {
+        "bad": [
+          "...",
+          "string userName = ctx.getAuthenticatedUserName();",
+          "string query = \"SELECT * FROM items WHERE owner = '\" + userName + \"' AND itemname = '\" + ItemName.Text + \"'\";",
+          "sda = new SqlDataAdapter(query, conn);",
+          "DataTable dt = new DataTable();",
+          "sda.Fill(dt);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "MEM_ALLOC"
+        ]
+      },
+      {
+        "bad": [
+          "...",
+          "string userName = ctx.getAuthenticatedUserName();",
+          "string query = \"SELECT * FROM items WHERE owner = '\" + userName + \"' AND itemname = '\" + ItemName.Text + \"'\";",
+          "sda = new SqlDataAdapter(query, conn);",
+          "DataTable dt = new DataTable();",
+          "sda.Fill(dt);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "MEM_ALLOC"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 59,
+    "title": "CWE-59: Improper Link Resolution Before File Access ('Link Following')",
+    "examples": []
+  },
+  {
+    "cwe_id": 134,
+    "title": "CWE-134: Use of Externally-Controlled Format String",
+    "examples": [
+      {
+        "bad": [
+          "#include <stdio.h>",
+          "void printWrapper(char *string) ",
+          "printf(string);",
+          "int main(int argc, char **argv) ",
+          "char buf[5012];",
+          "memcpy(buf, argv[1], 5012);",
+          "printWrapper(argv[1]);",
+          "return (0);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "MEM_COPY",
+          "ARRAY_ACCESS",
+          "ARRAY_ACCESS",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "int main(int argc, char **argv)",
+          "char buf[128];",
+          "...",
+          "snprintf(buf,128,argv[1]);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "MEM_COPY",
+          "ARRAY_ACCESS"
+        ]
+      },
+      {
+        "bad": [
+          "printf(\"%d %d %1$d %1$d\\n\", 5, 9);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 125,
+    "title": "CWE-125: Out-of-bounds Read",
+    "examples": [
+      {
+        "bad": [
+          "int getValueFromArray(int *array, int len, int index) ",
+          "int value;",
+          "if (index < len) ",
+          "value = array[index];",
+          "else ",
+          "printf(\"Value is: %d\\n\", array[index]);",
+          "value = -1;",
+          "return value;"
+        ],
+        "good": [
+          "...",
+          "if (index >= 0 && index < len) ",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "INDEX_OP",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARITH_OP",
+          "RETURN"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 17,
+    "title": "CWE CATEGORY: DEPRECATED: Code",
+    "examples": []
+  },
+  {
+    "cwe_id": 255,
+    "title": "CWE CATEGORY: Credentials Management Errors",
+    "examples": []
+  },
+  {
+    "cwe_id": 476,
+    "title": "CWE-476: NULL Pointer Dereference",
+    "examples": [
+      {
+        "bad": [
+          "void host_lookup(char *user_supplied_addr)",
+          "struct hostent *hp;",
+          "in_addr_t *addr;",
+          "char hostname[64];",
+          "in_addr_t inet_addr(const char *cp);",
+          "validate_addr_form(user_supplied_addr);",
+          "addr = inet_addr(user_supplied_addr);",
+          "hp = gethostbyaddr( addr, sizeof(struct in_addr), AF_INET);",
+          "strcpy(hostname, hp->h_name);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "SIZE_CHECK",
+          "MEM_COPY",
+          "POINTER_OP",
+          "ARITH_OP",
+          "UNSAFE_COPY"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 415,
+    "title": "CWE-415: Double Free",
+    "examples": [
+      {
+        "bad": [
+          "char* ptr = (char*)malloc (SIZE);",
+          "...",
+          "if (abrt) ",
+          "free(ptr);",
+          "...",
+          "free(ptr);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "MEM_FREE",
+          "MEM_FREE"
+        ]
+      },
+      {
+        "bad": [
+          "#include <stdio.h>",
+          "#include <unistd.h>",
+          "#define BUFSIZE1 512",
+          "#define BUFSIZE2 ((BUFSIZE1/2) - 8)",
+          "int main(int argc, char **argv) ",
+          "char *buf1R1;",
+          "char *buf2R1;",
+          "char *buf1R2;",
+          "buf1R1 = (char *) malloc(BUFSIZE2);",
+          "buf2R1 = (char *) malloc(BUFSIZE2);",
+          "free(buf1R1);",
+          "free(buf2R1);",
+          "buf1R2 = (char *) malloc(BUFSIZE1);",
+          "strncpy(buf1R2, argv[1], BUFSIZE1-1);",
+          "free(buf2R1);",
+          "free(buf1R2);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_FREE",
+          "MEM_FREE",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_COPY",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "MEM_FREE",
+          "MEM_FREE"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 416,
+    "title": "CWE-416: Use After Free",
+    "examples": [
+      {
+        "bad": [
+          "#include <stdio.h>",
+          "#include <unistd.h>",
+          "#define BUFSIZER1 512",
+          "#define BUFSIZER2 ((BUFSIZER1/2) - 8)",
+          "int main(int argc, char **argv) ",
+          "char *buf1R1;",
+          "char *buf2R1;",
+          "char *buf2R2;",
+          "char *buf3R2;",
+          "buf1R1 = (char *) malloc(BUFSIZER1);",
+          "buf2R1 = (char *) malloc(BUFSIZER1);",
+          "free(buf2R1);",
+          "buf2R2 = (char *) malloc(BUFSIZER2);",
+          "buf3R2 = (char *) malloc(BUFSIZER2);",
+          "strncpy(buf2R1, argv[1], BUFSIZER1-1);",
+          "free(buf1R1);",
+          "free(buf2R2);",
+          "free(buf3R2);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_FREE",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_COPY",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "MEM_FREE",
+          "MEM_FREE",
+          "MEM_FREE"
+        ]
+      },
+      {
+        "bad": [
+          "char* ptr = (char*)malloc (SIZE);",
+          "if (err) ",
+          "abrt = 1;",
+          "free(ptr);",
+          "...",
+          "if (abrt) ",
+          "logError(\"operation aborted before commit\", ptr);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "MEM_FREE",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 22,
+    "title": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+    "examples": []
+  },
+  {
+    "cwe_id": 254,
+    "title": "CWE CATEGORY: 7PK - Security Features",
+    "examples": []
+  },
+  {
+    "cwe_id": 18,
+    "title": "CWE CATEGORY: DEPRECATED: Source Code",
+    "examples": []
+  },
+  {
+    "cwe_id": 19,
+    "title": "CWE CATEGORY: Data Processing Errors",
+    "examples": []
+  },
+  {
+    "cwe_id": 79,
+    "title": "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+    "examples": []
+  },
+  {
+    "cwe_id": 284,
+    "title": "CWE-284: Improper Access Control",
+    "examples": []
+  },
+  {
+    "cwe_id": 787,
+    "title": "CWE-787: Out-of-bounds Write",
+    "examples": [
+      {
+        "bad": [
+          "int id_sequence[3];",
+          "id_sequence[0] = 123;",
+          "id_sequence[1] = 234;",
+          "id_sequence[2] = 345;",
+          "id_sequence[3] = 456;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "ARRAY_ACCESS",
+          "ARRAY_ACCESS",
+          "ARRAY_ACCESS",
+          "ARRAY_ACCESS"
+        ]
+      },
+      {
+        "bad": [
+          "int returnChunkSize(void *) ",
+          "...",
+          "int main() ",
+          "...",
+          "memcpy(destBuf, srcBuf, (returnChunkSize(destBuf)-1));",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_COPY",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "void host_lookup(char *user_supplied_addr)",
+          "struct hostent *hp;",
+          "in_addr_t *addr;",
+          "char hostname[64];",
+          "in_addr_t inet_addr(const char *cp);",
+          "validate_addr_form(user_supplied_addr);",
+          "addr = inet_addr(user_supplied_addr);",
+          "hp = gethostbyaddr( addr, sizeof(struct in_addr), AF_INET);",
+          "strcpy(hostname, hp->h_name);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "SIZE_CHECK",
+          "MEM_COPY",
+          "POINTER_OP",
+          "ARITH_OP",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "char * copy_input(char *user_supplied_string)",
+          "int i, dst_index;",
+          "char *dst_buf = (char*)malloc(4*sizeof(char) * MAX_SIZE);",
+          "if ( MAX_SIZE <= strlen(user_supplied_string) )",
+          "die(\"user string too long, die evil hacker!\");",
+          "dst_index = 0;",
+          "for ( i = 0; i < strlen(user_supplied_string); i++ )",
+          "if( '&' == user_supplied_string[i] )",
+          "dst_buf[dst_index++] = '&';",
+          "dst_buf[dst_index++] = 'a';",
+          "dst_buf[dst_index++] = 'm';",
+          "dst_buf[dst_index++] = 'p';",
+          "dst_buf[dst_index++] = ';';",
+          "else if ('<' == user_supplied_string[i] )",
+          "else dst_buf[dst_index++] = user_supplied_string[i];",
+          "return dst_buf;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "CONDITIONAL",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "char* trimTrailingWhitespace(char *strMessage, int length) ",
+          "char *retMessage;",
+          "char *message = malloc(sizeof(char)*(length+1));",
+          "char message[length+1];",
+          "int index;",
+          "for (index = 0; index < length; index++) ",
+          "message[index] = strMessage[index];",
+          "message[index] = '\\0';",
+          "int len = index-1;",
+          "while (isspace(message[len])) ",
+          "message[len] = '\\0';",
+          "len--;",
+          "retMessage = message;",
+          "return retMessage;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "INDEX_OP",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "INDEX_OP",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARITH_OP",
+          "INDEX_OP",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "INDEX_OP",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "CONTROL_FLOW",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "INC_DEC",
+          "RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "int i;",
+          "unsigned int numWidgets;",
+          "Widget **WidgetList;",
+          "numWidgets = GetUntrustedSizeValue();",
+          "if ((numWidgets == 0) || (numWidgets > MAX_NUM_WIDGETS)) ",
+          "ExitError(\"Incorrect number of widgets requested!\");",
+          "WidgetList = (Widget **)malloc(numWidgets * sizeof(Widget *));",
+          "printf(\"WidgetList ptr=%p\\n\", WidgetList);",
+          "for(i=0; i<numWidgets; i++) ",
+          "WidgetList[i] = InitializeWidget();",
+          "WidgetList[numWidgets] = NULL;",
+          "showWidgets(WidgetList);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARRAY_ACCESS",
+          "ARRAY_ACCESS"
+        ]
+      },
+      {
+        "bad": [
+          "int main() ",
+          "...",
+          "char *result = strstr(destBuf, \"Replace Me\");",
+          "int idx = result - destBuf;",
+          "strcpy(&destBuf[idx], srcBuf);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARITH_OP",
+          "MEM_COPY",
+          "ARRAY_ACCESS",
+          "UNSAFE_COPY"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 400,
+    "title": "CWE-400: Uncontrolled Resource Consumption",
+    "examples": [
+      {
+        "bad": [],
+        "good": [
+          "unsigned int length = getMessageLength(message[0]);",
+          "if ((length > 0) && (length < MAX_LENGTH)) ..."
+        ],
+        "good_features": [
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [
+          "sock=socket(AF_INET, SOCK_STREAM, 0);",
+          "while (1) ",
+          "newsock=accept(sock, ...);",
+          "printf(\"A connection has been accepted\\n\");",
+          "pid = fork();"
+        ],
+        "good": [
+          "unsigned int length = getMessageLength(message[0]);",
+          "if ((length > 0) && (length < MAX_LENGTH)) ..."
+        ],
+        "good_features": [
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "int writeDataFromSocketToFile(char *host, int port)",
+          "char filename[FILENAME_SIZE];",
+          "char buffer[BUFFER_SIZE];",
+          "int socket = openSocketConnection(host, port);",
+          "if (socket < 0) ",
+          "printf(\"Unable to open socket connection\");",
+          "return(FAIL);",
+          "if (getNextMessage(socket, filename, FILENAME_SIZE) > 0) ",
+          "if (openFileToWrite(filename) > 0) ",
+          "while (getNextMessage(socket, buffer, BUFFER_SIZE) > 0)",
+          "if (!(writeToFile(buffer) > 0))",
+          "break;",
+          "closeFile();",
+          "closeSocket(socket);"
+        ],
+        "good": [
+          "unsigned int length = getMessageLength(message[0]);",
+          "if ((length > 0) && (length < MAX_LENGTH)) ..."
+        ],
+        "good_features": [
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN",
+          "UNGUARDED_RETURN",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "int processMessage(char **message)",
+          "char *body;",
+          "int length = getMessageLength(message[0]);",
+          "if (length > 0) ",
+          "body = &message[1][0];",
+          "processMessageBody(body);",
+          "return(SUCCESS);",
+          "else ",
+          "printf(\"Unable to process message; invalid message length\");",
+          "return(FAIL);"
+        ],
+        "good": [
+          "unsigned int length = getMessageLength(message[0]);",
+          "if ((length > 0) && (length < MAX_LENGTH)) ..."
+        ],
+        "good_features": [
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "ARRAY_ACCESS",
+          "RETURN",
+          "UNGUARDED_RETURN",
+          "INDEX_OP",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 388,
+    "title": "CWE CATEGORY: 7PK - Errors",
+    "examples": []
+  },
+  {
+    "cwe_id": 190,
+    "title": "CWE-190: Integer Overflow or Wraparound",
+    "examples": [
+      {
+        "bad": [
+          "img_t table_ptr;",
+          "int num_imgs;",
+          "...",
+          "num_imgs = get_num_imgs();",
+          "table_ptr = (img_t*)malloc(sizeof(img_t)*num_imgs);",
+          "..."
+        ],
+        "good": [
+          "...",
+          "float calculateRevenueForQuarter(long quarterSold) ...",
+          "int determineFirstQuarterRevenue() ",
+          "...",
+          "long quarterSold = JanSold + FebSold + MarSold;",
+          "quarterRevenue = calculateRevenueForQuarter(quarterSold);",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "ARITH_OP"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "nresp = packet_get_int();",
+          "if (nresp > 0) ",
+          "response = xmalloc(nresp*sizeof(char*));",
+          "for (i = 0; i < nresp; i++) response[i] = packet_get_string(NULL);"
+        ],
+        "good": [
+          "...",
+          "float calculateRevenueForQuarter(long quarterSold) ...",
+          "int determineFirstQuarterRevenue() ",
+          "...",
+          "long quarterSold = JanSold + FebSold + MarSold;",
+          "quarterRevenue = calculateRevenueForQuarter(quarterSold);",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "ARITH_OP"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "INC_DEC"
+        ]
+      },
+      {
+        "bad": [
+          "short int bytesRec = 0;",
+          "char buf[SOMEBIGNUM];",
+          "while(bytesRec < MAXGET) ",
+          "bytesRec += getFromInput(buf+bytesRec);"
+        ],
+        "good": [
+          "...",
+          "float calculateRevenueForQuarter(long quarterSold) ...",
+          "int determineFirstQuarterRevenue() ",
+          "...",
+          "long quarterSold = JanSold + FebSold + MarSold;",
+          "quarterRevenue = calculateRevenueForQuarter(quarterSold);",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "ARITH_OP"
+        ],
+        "bad_features": [
+          "SHORT_USE",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "CONTROL_FLOW",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "#define JAN 1",
+          "#define FEB 2",
+          "#define MAR 3",
+          "short getMonthlySales(int month) ...",
+          "float calculateRevenueForQuarter(short quarterSold) ...",
+          "int determineFirstQuarterRevenue() ",
+          "float quarterRevenue = 0.0f;",
+          "short JanSold = getMonthlySales(JAN);",
+          "short FebSold = getMonthlySales(FEB);",
+          "short MarSold = getMonthlySales(MAR);",
+          "short quarterSold = JanSold + FebSold + MarSold;",
+          "quarterRevenue = calculateRevenueForQuarter(quarterSold);",
+          "saveFirstQuarterRevenue(quarterRevenue);",
+          "return 0;"
+        ],
+        "good": [
+          "...",
+          "float calculateRevenueForQuarter(long quarterSold) ...",
+          "int determineFirstQuarterRevenue() ",
+          "...",
+          "long quarterSold = JanSold + FebSold + MarSold;",
+          "quarterRevenue = calculateRevenueForQuarter(quarterSold);",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "ARITH_OP"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "SHORT_USE",
+          "SHORT_USE",
+          "SHORT_USE",
+          "SHORT_USE",
+          "SHORT_USE",
+          "ARITH_OP",
+          "RETURN"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 285,
+    "title": "CWE-285: Improper Authorization",
+    "examples": []
+  },
+  {
+    "cwe_id": 74,
+    "title": "CWE-74: Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+    "examples": []
+  },
+  {
+    "cwe_id": 502,
+    "title": "CWE-502: Deserialization of Untrusted Data",
+    "examples": []
+  },
+  {
+    "cwe_id": 404,
+    "title": "CWE-404: Improper Resource Shutdown or Release",
+    "examples": [
+      {
+        "bad": [
+          "...",
+          "SqlConnection conn = new SqlConnection(connString);",
+          "SqlCommand cmd = new SqlCommand(queryString);",
+          "cmd.Connection = conn;",
+          "conn.Open();",
+          "SqlDataReader rdr = cmd.ExecuteReader();",
+          "HarvestResults(rdr);",
+          "conn.Connection.Close();",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "MEM_ALLOC"
+        ]
+      },
+      {
+        "bad": [
+          "int decodeFile(char* fName) ",
+          "char buf[BUF_SZ];",
+          "FILE* f = fopen(fName, \"r\");",
+          "if (!f) ",
+          "printf(\"cannot open %s\\n\", fName);",
+          "return DECODE_FAIL;",
+          "else ",
+          "while (fgets(buf, BUF_SZ, f)) ",
+          "if (!checkChecksum(buf)) ",
+          "return DECODE_FAIL;",
+          "else ",
+          "decodeBlock(buf);",
+          "fclose(f);",
+          "return DECODE_SUCCESS;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "CONTROL_FLOW",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "class A ",
+          "void foo();",
+          ";",
+          "void A::foo()",
+          "int *ptr;",
+          "ptr = (int*)malloc(sizeof(int));",
+          "delete ptr;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "class A",
+          "void foo(bool);",
+          ";",
+          "void A::foo(bool heap) ",
+          "int localArray[2] = ",
+          "11,22",
+          ";",
+          "int *p = localArray;",
+          "if (heap)",
+          "p = new int[2];",
+          "delete[] p;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "MEM_ALLOC",
+          "ARRAY_ACCESS",
+          "ARRAY_ACCESS"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 78,
+    "title": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+    "examples": [
+      {
+        "bad": [
+          "int main(int argc, char** argv) ",
+          "char cmd[CMD_MAX] = \"/usr/bin/cat \";",
+          "strcat(cmd, argv[1]);",
+          "system(cmd);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "#include <stdio.h>",
+          "#include <unistd.h>",
+          "int main(int argc, char **argv) ",
+          "char cat[] = \"cat \";",
+          "char *command;",
+          "size_t commandLength;",
+          "commandLength = strlen(cat) + strlen(argv[1]) + 1;",
+          "command = (char *) malloc(commandLength);",
+          "strncpy(command, cat, commandLength);",
+          "strncat(command, argv[1], (commandLength - strlen(cat)) );",
+          "system(command);",
+          "return (0);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_COPY",
+          "ARRAY_ACCESS",
+          "ARITH_OP",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 862,
+    "title": "CWE-862: Missing Authorization",
+    "examples": []
+  },
+  {
+    "cwe_id": 835,
+    "title": "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')",
+    "examples": [
+      {
+        "bad": [
+          "int processMessagesFromServer(char *hostaddr, int port) ",
+          "...",
+          "int servsock;",
+          "int connected;",
+          "struct sockaddr_in servaddr;",
+          "servsock = socket( AF_INET, SOCK_STREAM, 0);",
+          "memset( &servaddr, 0, sizeof(servaddr));",
+          "servaddr.sin_family = AF_INET;",
+          "servaddr.sin_port = htons(port);",
+          "servaddr.sin_addr.s_addr = inet_addr(hostaddr);",
+          "do ",
+          "connected = connect(servsock, (struct sockaddr *)&servaddr, sizeof(servaddr));",
+          "if (connected > -1) ",
+          "...",
+          " while (connected < 0);",
+          "..."
+        ],
+        "good": [
+          "int processMessagesFromServer(char *hostaddr, int port) ",
+          "...",
+          "int count = 0;",
+          "do ",
+          "connected = connect(servsock, (struct sockaddr *)&servaddr, sizeof(servaddr));",
+          "count++;",
+          "if (connected > -1) ",
+          "...",
+          " while (connected < 0 && count < MAX_ATTEMPTS);",
+          "..."
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "ARITH_OP",
+          "INC_DEC",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "CONTROL_FLOW"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ZERO",
+          "SIZE_CHECK",
+          "MEMORY_INIT",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 617,
+    "title": "CWE-617: Reachable Assertion",
+    "examples": []
+  },
+  {
+    "cwe_id": 269,
+    "title": "CWE-269: Improper Privilege Management",
+    "examples": [
+      {
+        "bad": [
+          "seteuid(0);",
+          "seteuid(getuid());"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 772,
+    "title": "CWE-772: Missing Release of Resource after Effective Lifetime",
+    "examples": [
+      {
+        "bad": [
+          "SqlConnection conn = new SqlConnection(connString);",
+          "SqlCommand cmd = new SqlCommand(queryString);",
+          "cmd.Connection = conn;",
+          "conn.Open();",
+          "SqlDataReader rdr = cmd.ExecuteReader();",
+          "HarvestResults(rdr);",
+          "conn.Connection.Close();"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "MEM_ALLOC",
+          "MEM_ALLOC"
+        ]
+      },
+      {
+        "bad": [
+          "...",
+          "SqlConnection conn = new SqlConnection(connString);",
+          "SqlCommand cmd = new SqlCommand(queryString);",
+          "cmd.Connection = conn;",
+          "conn.Open();",
+          "SqlDataReader rdr = cmd.ExecuteReader();",
+          "HarvestResults(rdr);",
+          "conn.Connection.Close();",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "MEM_ALLOC"
+        ]
+      },
+      {
+        "bad": [
+          "int decodeFile(char* fName) ",
+          "char buf[BUF_SZ];",
+          "FILE* f = fopen(fName, \"r\");",
+          "if (!f) ",
+          "printf(\"cannot open %s\\n\", fName);",
+          "return DECODE_FAIL;",
+          "else ",
+          "while (fgets(buf, BUF_SZ, f)) ",
+          "if (!checkChecksum(buf)) ",
+          "return DECODE_FAIL;",
+          "else ",
+          "decodeBlock(buf);",
+          "fclose(f);",
+          "return DECODE_SUCCESS;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "CONTROL_FLOW",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 843,
+    "title": "CWE-843: Access of Resource Using Incompatible Type ('Type Confusion')",
+    "examples": [
+      {
+        "bad": [
+          "#define NAME_TYPE 1",
+          "#define ID_TYPE 2",
+          "struct MessageBuffer",
+          "int msgType;",
+          "union ",
+          "char *name;",
+          "int nameID;",
+          ";",
+          ";",
+          "int main (int argc, char **argv) ",
+          "struct MessageBuffer buf;",
+          "char *defaultMessage = \"Hello World\";",
+          "buf.msgType = NAME_TYPE;",
+          "buf.name = defaultMessage;",
+          "printf(\"Pointer of buf.name is %p\\n\", buf.name);",
+          "buf.nameID = (int)(defaultMessage + 1);",
+          "printf(\"Pointer of buf.name is now %p\\n\", buf.name);",
+          "if (buf.msgType == NAME_TYPE) ",
+          "printf(\"Message: %s\\n\", buf.name);",
+          "else ",
+          "printf(\"Message: Use ID %d\\n\", buf.nameID);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 834,
+    "title": "CWE-834: Excessive Iteration",
+    "examples": [
+      {
+        "bad": [
+          "void do_something_recursive (int flg)",
+          "...",
+          "if (flg)  do_something_recursive (flg); ",
+          "int flag = 1;",
+          "do_something_recursive (flag);"
+        ],
+        "good": [
+          "void do_something_recursive (int flg)",
+          "...",
+          "if (flg)  do_something_recursive (flg); ",
+          "int flag = 1;",
+          "do_something_recursive (flag);"
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONTROL_FLOW"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 369,
+    "title": "CWE-369: Divide By Zero",
+    "examples": [
+      {
+        "bad": [
+          "double divide(double x, double y)",
+          "return x/y;"
+        ],
+        "good": [
+          "const int DivideByZero = 10;",
+          "double divide(double x, double y)",
+          "if ( 0 == y )",
+          "throw DivideByZero;",
+          "return x/y;",
+          "...",
+          "try",
+          "divide(10, 0);",
+          "catch( int i )",
+          "if(i==DivideByZero) ",
+          "cerr<<\"Divide by zero error\";"
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "RETURN",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "int Division(int x, int y)",
+          "return (x / y);"
+        ],
+        "good": [
+          "int SafeDivision(int x, int y)",
+          "try",
+          "return (x / y);",
+          "catch (System.DivideByZeroException dbz)",
+          "System.Console.WriteLine(\"Division by zero attempted!\");",
+          "return 0;"
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "RETURN",
+          "ARITH_OP",
+          "UNGUARDED_RETURN",
+          "RETURN"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "RETURN",
+          "ARITH_OP",
+          "UNGUARDED_RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "int Division(int x, int y)",
+          "return (x / y);"
+        ],
+        "good": [
+          "int SafeDivision(int x, int y)",
+          "try",
+          "return (x / y);",
+          "catch (System.DivideByZeroException dbz)",
+          "System.Console.WriteLine(\"Division by zero attempted!\");",
+          "return 0;"
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "RETURN",
+          "ARITH_OP",
+          "UNGUARDED_RETURN",
+          "RETURN"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "RETURN",
+          "ARITH_OP",
+          "UNGUARDED_RETURN"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 754,
+    "title": "CWE-754: Improper Check for Unusual or Exceptional Conditions",
+    "examples": [
+      {
+        "bad": [
+          "char buf[10], cp_buf[10];",
+          "fgets(buf, 10, stdin);",
+          "strcpy(cp_buf, buf);"
+        ],
+        "good": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "int isOutput = SUCCESS;",
+          "int isOpen = openFileToWrite(filename);",
+          "if (isOpen == FAIL) ",
+          "printf(\"Unable to open file %s\", filename);",
+          "isOutput = FAIL;",
+          "else ",
+          "int isWrite = writeToFile(output);",
+          "if (isWrite == FAIL) ",
+          "printf(\"Unable to write to file %s\", filename);",
+          "isOutput = FAIL;",
+          "int isClose = closeFile(filename);",
+          "if (isClose == FAIL)",
+          "isOutput = FAIL;",
+          "return isOutput;"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN"
+        ],
+        "bad_features": [
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "MEM_COPY",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "buf = (char*) malloc(req_size);",
+          "strncpy(buf, xfer, req_size);"
+        ],
+        "good": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "int isOutput = SUCCESS;",
+          "int isOpen = openFileToWrite(filename);",
+          "if (isOpen == FAIL) ",
+          "printf(\"Unable to open file %s\", filename);",
+          "isOutput = FAIL;",
+          "else ",
+          "int isWrite = writeToFile(output);",
+          "if (isWrite == FAIL) ",
+          "printf(\"Unable to write to file %s\", filename);",
+          "isOutput = FAIL;",
+          "int isClose = closeFile(filename);",
+          "if (isClose == FAIL)",
+          "isOutput = FAIL;",
+          "return isOutput;"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN"
+        ],
+        "bad_features": [
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "INDEX_OP",
+          "ARITH_OP",
+          "MEM_COPY",
+          "INDEX_OP"
+        ]
+      },
+      {
+        "bad": [
+          "char[] byteArray = new char[1024];",
+          "for (IEnumerator i=users.GetEnumerator(); i.MoveNext() ;i.Current()) ",
+          "String userName = (String) i.Current();",
+          "String pFileName = PFILE_ROOT + \"/\" + userName;",
+          "StreamReader sr = new StreamReader(pFileName);",
+          "sr.Read(byteArray,0,1024);",
+          "sr.Close();",
+          "processPFile(userName, byteArray);"
+        ],
+        "good": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "int isOutput = SUCCESS;",
+          "int isOpen = openFileToWrite(filename);",
+          "if (isOpen == FAIL) ",
+          "printf(\"Unable to open file %s\", filename);",
+          "isOutput = FAIL;",
+          "else ",
+          "int isWrite = writeToFile(output);",
+          "if (isWrite == FAIL) ",
+          "printf(\"Unable to write to file %s\", filename);",
+          "isOutput = FAIL;",
+          "int isClose = closeFile(filename);",
+          "if (isClose == FAIL)",
+          "isOutput = FAIL;",
+          "return isOutput;"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN"
+        ],
+        "bad_features": [
+          "MEM_ALLOC",
+          "ARRAY_ACCESS",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "MEM_ALLOC"
+        ]
+      },
+      {
+        "bad": [],
+        "good": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "int isOutput = SUCCESS;",
+          "int isOpen = openFileToWrite(filename);",
+          "if (isOpen == FAIL) ",
+          "printf(\"Unable to open file %s\", filename);",
+          "isOutput = FAIL;",
+          "else ",
+          "int isWrite = writeToFile(output);",
+          "if (isWrite == FAIL) ",
+          "printf(\"Unable to write to file %s\", filename);",
+          "isOutput = FAIL;",
+          "int isClose = closeFile(filename);",
+          "if (isClose == FAIL)",
+          "isOutput = FAIL;",
+          "return isOutput;"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [],
+        "good": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "int isOutput = SUCCESS;",
+          "int isOpen = openFileToWrite(filename);",
+          "if (isOpen == FAIL) ",
+          "printf(\"Unable to open file %s\", filename);",
+          "isOutput = FAIL;",
+          "else ",
+          "int isWrite = writeToFile(output);",
+          "if (isWrite == FAIL) ",
+          "printf(\"Unable to write to file %s\", filename);",
+          "isOutput = FAIL;",
+          "int isClose = closeFile(filename);",
+          "if (isClose == FAIL)",
+          "isOutput = FAIL;",
+          "return isOutput;"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [
+          "Dim MyFile As New FileStream(\"myfile.txt\", FileMode.Open, FileAccess.Read, FileShare.Read)",
+          "Dim MyArray(50) As Byte",
+          "MyFile.Read(MyArray, 0, 50)",
+          "DoDangerousOperation(MyArray(20))"
+        ],
+        "good": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "int isOutput = SUCCESS;",
+          "int isOpen = openFileToWrite(filename);",
+          "if (isOpen == FAIL) ",
+          "printf(\"Unable to open file %s\", filename);",
+          "isOutput = FAIL;",
+          "else ",
+          "int isWrite = writeToFile(output);",
+          "if (isWrite == FAIL) ",
+          "printf(\"Unable to write to file %s\", filename);",
+          "isOutput = FAIL;",
+          "int isClose = closeFile(filename);",
+          "if (isClose == FAIL)",
+          "isOutput = FAIL;",
+          "return isOutput;"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN"
+        ],
+        "bad_features": [
+          "NO_FEATURE"
+        ]
+      },
+      {
+        "bad": [
+          "void host_lookup(char *user_supplied_addr)",
+          "struct hostent *hp;",
+          "in_addr_t *addr;",
+          "char hostname[64];",
+          "in_addr_t inet_addr(const char *cp);",
+          "validate_addr_form(user_supplied_addr);",
+          "addr = inet_addr(user_supplied_addr);",
+          "hp = gethostbyaddr( addr, sizeof(struct in_addr), AF_INET);",
+          "strcpy(hostname, hp->h_name);"
+        ],
+        "good": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "int isOutput = SUCCESS;",
+          "int isOpen = openFileToWrite(filename);",
+          "if (isOpen == FAIL) ",
+          "printf(\"Unable to open file %s\", filename);",
+          "isOutput = FAIL;",
+          "else ",
+          "int isWrite = writeToFile(output);",
+          "if (isWrite == FAIL) ",
+          "printf(\"Unable to write to file %s\", filename);",
+          "isOutput = FAIL;",
+          "int isClose = closeFile(filename);",
+          "if (isClose == FAIL)",
+          "isOutput = FAIL;",
+          "return isOutput;"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "SIZE_CHECK",
+          "MEM_COPY",
+          "POINTER_OP",
+          "ARITH_OP",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "openFileToWrite(filename);",
+          "writeToFile(output);",
+          "closeFile(filename);"
+        ],
+        "good": [
+          "int outputStringToFile(char *output, char *filename) ",
+          "int isOutput = SUCCESS;",
+          "int isOpen = openFileToWrite(filename);",
+          "if (isOpen == FAIL) ",
+          "printf(\"Unable to open file %s\", filename);",
+          "isOutput = FAIL;",
+          "else ",
+          "int isWrite = writeToFile(output);",
+          "if (isWrite == FAIL) ",
+          "printf(\"Unable to write to file %s\", filename);",
+          "isOutput = FAIL;",
+          "int isClose = closeFile(filename);",
+          "if (isClose == FAIL)",
+          "isOutput = FAIL;",
+          "return isOutput;"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 494,
+    "title": "CWE-494: Download of Code Without Integrity Check",
+    "examples": []
+  },
+  {
+    "cwe_id": 943,
+    "title": "CWE-943: Improper Neutralization of Special Elements in Data Query Logic",
+    "examples": [
+      {
+        "bad": [
+          "...",
+          "string userName = ctx.getAuthenticatedUserName();",
+          "string query = \"SELECT * FROM items WHERE owner = '\" + userName + \"' AND itemname = '\" + ItemName.Text + \"'\";",
+          "sda = new SqlDataAdapter(query, conn);",
+          "DataTable dt = new DataTable();",
+          "sda.Fill(dt);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "MEM_ALLOC"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 665,
+    "title": "CWE-665: Improper Initialization",
+    "examples": [
+      {
+        "bad": [
+          "char str[20];",
+          "strcat(str, \"hello world\");",
+          "printf(\"%s\", str);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "UNSAFE_COPY"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 434,
+    "title": "CWE-434: Unrestricted Upload of File with Dangerous Type",
+    "examples": []
+  },
+  {
+    "cwe_id": 770,
+    "title": "CWE-770: Allocation of Resources Without Limits or Throttling",
+    "examples": [
+      {
+        "bad": [
+          "sock=socket(AF_INET, SOCK_STREAM, 0);",
+          "while (1) ",
+          "newsock=accept(sock, ...);",
+          "printf(\"A connection has been accepted\\n\");",
+          "pid = fork();"
+        ],
+        "good": [
+          "unsigned int length = getMessageLength(message[0]);",
+          "if ((length > 0) && (length < MAX_LENGTH)) ..."
+        ],
+        "good_features": [
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "int writeDataFromSocketToFile(char *host, int port)",
+          "char filename[FILENAME_SIZE];",
+          "char buffer[BUFFER_SIZE];",
+          "int socket = openSocketConnection(host, port);",
+          "if (socket < 0) ",
+          "printf(\"Unable to open socket connection\");",
+          "return(FAIL);",
+          "if (getNextMessage(socket, filename, FILENAME_SIZE) > 0) ",
+          "if (openFileToWrite(filename) > 0) ",
+          "while (getNextMessage(socket, buffer, BUFFER_SIZE) > 0)",
+          "if (!(writeToFile(buffer) > 0))",
+          "break;",
+          "closeFile();",
+          "closeSocket(socket);"
+        ],
+        "good": [
+          "unsigned int length = getMessageLength(message[0]);",
+          "if ((length > 0) && (length < MAX_LENGTH)) ..."
+        ],
+        "good_features": [
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "RETURN",
+          "UNGUARDED_RETURN",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "int processMessage(char **message)",
+          "char *body;",
+          "int length = getMessageLength(message[0]);",
+          "if (length > 0) ",
+          "body = &message[1][0];",
+          "processMessageBody(body);",
+          "return(SUCCESS);",
+          "else ",
+          "printf(\"Unable to process message; invalid message length\");",
+          "return(FAIL);"
+        ],
+        "good": [
+          "unsigned int length = getMessageLength(message[0]);",
+          "if ((length > 0) && (length < MAX_LENGTH)) ..."
+        ],
+        "good_features": [
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "ARRAY_ACCESS",
+          "RETURN",
+          "UNGUARDED_RETURN",
+          "INDEX_OP",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "bar connection() ",
+          "foo = malloc(1024);",
+          "return foo;",
+          "endConnection(bar foo) ",
+          "free(foo);",
+          "int main() ",
+          "while(1) ",
+          "foo=connection();",
+          "endConnection(foo)"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "RETURN",
+          "MEM_FREE",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "bar connection() ",
+          "foo = malloc(1024);",
+          "return foo;",
+          "endConnection(bar foo) ",
+          "free(foo);",
+          "int main() ",
+          "while(1) ",
+          "foo=connection();",
+          "endConnection(foo)"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "RETURN",
+          "MEM_FREE",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "bar connection() ",
+          "foo = malloc(1024);",
+          "return foo;",
+          "endConnection(bar foo) ",
+          "free(foo);",
+          "int main() ",
+          "while(1) ",
+          "foo=connection();",
+          "endConnection(foo)"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "RETURN",
+          "MEM_FREE",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 755,
+    "title": "CWE-755: Improper Handling of Exceptional Conditions",
+    "examples": [
+      {
+        "bad": [],
+        "good": [
+          "foo=malloc(sizeof(char));",
+          "if (foo==NULL) ",
+          "printf(\"Malloc failed to allocate memory resources\");",
+          "return -1;"
+        ],
+        "good_features": [
+          "MEM_ALLOC",
+          "SIZE_CHECK",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "PTR_NULL_CHECK",
+          "RETURN",
+          "ARITH_OP"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [
+          "foo=malloc(sizeof(char));",
+          "if (foo==NULL) "
+        ],
+        "good": [
+          "foo=malloc(sizeof(char));",
+          "if (foo==NULL) ",
+          "printf(\"Malloc failed to allocate memory resources\");",
+          "return -1;"
+        ],
+        "good_features": [
+          "MEM_ALLOC",
+          "SIZE_CHECK",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "PTR_NULL_CHECK",
+          "RETURN",
+          "ARITH_OP"
+        ],
+        "bad_features": [
+          "MEM_ALLOC",
+          "SIZE_CHECK",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "PTR_NULL_CHECK"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 129,
+    "title": "CWE-129: Improper Validation of Array Index",
+    "examples": [
+      {
+        "bad": [],
+        "good": [
+          "...",
+          "if (index >= 0 && index < len) ",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [],
+        "good": [
+          "...",
+          "if (index >= 0 && index < len) ",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [
+          "int getValueFromArray(int *array, int len, int index) ",
+          "int value;",
+          "if (index < len) ",
+          "value = array[index];",
+          "else ",
+          "printf(\"Value is: %d\\n\", array[index]);",
+          "value = -1;",
+          "return value;"
+        ],
+        "good": [
+          "...",
+          "if (index >= 0 && index < len) ",
+          "..."
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "INDEX_OP",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONTROL_FLOW",
+          "BOUNDS_CHECK_PRESENT",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARITH_OP",
+          "RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "int getsizes(int sock, int count, int *sizes) ",
+          "...",
+          "char buf[BUFFER_SIZE];",
+          "int ok;",
+          "int num, size;",
+          "while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)",
+          "if (DOTLINE(buf))",
+          "break;",
+          "else if (sscanf(buf, \"%d %d\", &num, &size) == 2)",
+          "sizes[num - 1] = size;",
+          "..."
+        ],
+        "good": [
+          "int getsizes(int sock, int count, int *sizes) ",
+          "...",
+          "char buf[BUFFER_SIZE];",
+          "int ok;",
+          "int num, size;",
+          "while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)",
+          "if (DOTLINE(buf))",
+          "break;",
+          "else if (sscanf(buf, \"%d %d\", &num, &size) == 2) ",
+          "if (num > 0 && num <= (unsigned)count)",
+          "sizes[num - 1] = size;",
+          "else",
+          "report(stderr, \"Warning: ignoring bogus data for message sizes returned by server.\\n\");",
+          "..."
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "INDEX_OP",
+          "SIZE_CHECK",
+          "CONTROL_FLOW",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARITH_OP"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "INDEX_OP",
+          "SIZE_CHECK",
+          "CONTROL_FLOW",
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "INDEX_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "int main (int argc, char **argv) ",
+          "char *items[] = \"boat\", \"car\", \"truck\", \"train\";",
+          "int index = GetUntrustedOffset();",
+          "printf(\"You selected %s\\n\", items[index-1]);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "ARRAY_ACCESS",
+          "DEREF",
+          "ARITH_OP",
+          "INDEX_OP",
+          "ARRAY_ACCESS",
+          "INDEX_OP",
+          "ARITH_OP"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 674,
+    "title": "CWE-674: Uncontrolled Recursion",
+    "examples": [
+      {
+        "bad": [
+          "void do_something_recursive (int flg)",
+          "...",
+          "if (flg)  do_something_recursive (flg); ",
+          "int flag = 1;",
+          "do_something_recursive (flag);"
+        ],
+        "good": [
+          "void do_something_recursive (int flg)",
+          "...",
+          "if (flg)  do_something_recursive (flg); ",
+          "int flag = 1;",
+          "do_something_recursive (flag);"
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "CONTROL_FLOW"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 191,
+    "title": "CWE-191: Integer Underflow (Wrap or Wraparound)",
+    "examples": [
+      {
+        "bad": [
+          "#include <stdio.h>",
+          "#include <stdbool.h>",
+          "main (void)",
+          "int i;",
+          "i = -2147483648;",
+          "i = i - 1;",
+          "return 0;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "ARITH_OP",
+          "ARITH_OP",
+          "RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "int a = 5, b = 6;",
+          "size_t len = a - b;",
+          "char buf[len];"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 1187,
+    "title": "CWE-1187: DEPRECATED: Use of Uninitialized Resource",
+    "examples": []
+  },
+  {
+    "cwe_id": 682,
+    "title": "CWE-682: Incorrect Calculation",
+    "examples": [
+      {
+        "bad": [
+          "img_t table_ptr;",
+          "int num_imgs;",
+          "...",
+          "num_imgs = get_num_imgs();",
+          "table_ptr = (img_t*)malloc(sizeof(img_t)*num_imgs);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "int *p = x;",
+          "char * second_char = (char *)(p + 1);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 732,
+    "title": "CWE-732: Incorrect Permission Assignment for Critical Resource",
+    "examples": [
+      {
+        "bad": [
+          "#define OUTFILE \"hello.out\"",
+          "umask(0);",
+          "FILE *out;",
+          "out = fopen(OUTFILE, \"w\");",
+          "if (out) ",
+          "fprintf(out, \"hello world!\\n\");",
+          "fclose(out);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 522,
+    "title": "CWE-522: Insufficiently Protected Credentials",
+    "examples": [
+      {
+        "bad": [
+          "int VerifyAdmin(char *password) ",
+          "if (strcmp(compress(password), compressed_password)) ",
+          "printf(\"Incorrect Password!\\n\");",
+          "return(0);",
+          "printf(\"Entering Diagnostic Mode...\\n\");",
+          "return(1);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "UNGUARDED_RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 918,
+    "title": "CWE-918: Server-Side Request Forgery (SSRF)",
+    "examples": []
+  },
+  {
+    "cwe_id": 358,
+    "title": "CWE-358: Improperly Implemented Security Check for Standard",
+    "examples": []
+  },
+  {
+    "cwe_id": 295,
+    "title": "CWE-295: Improper Certificate Validation",
+    "examples": [
+      {
+        "bad": [
+          "if ((cert = SSL_get_peer_certificate(ssl)) && host)",
+          "foo=SSL_get_verify_result(ssl);",
+          "if ((X509_V_OK==foo) || X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN==foo))"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "cert = SSL_get_peer_certificate(ssl);",
+          "if (cert && (SSL_get_verify_result(ssl)==X509_V_OK)) "
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "CONDITIONAL",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "if (cert = SSL_get_peer(certificate(ssl)) ",
+          "foo=SSL_get_verify_result(ssl);",
+          "if ((X509_V_OK==foo) || (X509_V_ERR_CERT_HAS_EXPIRED==foo))"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "CONTROL_FLOW",
+          "CONDITIONAL",
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "if (cert = SSL_get_peer_certificate(ssl)) "
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "CONTROL_FLOW"
+        ]
+      },
+      {
+        "bad": [
+          "if (cert = SSL_get_peer_certificate(ssl)) "
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 346,
+    "title": "CWE-346: Origin Validation Error",
+    "examples": []
+  },
+  {
+    "cwe_id": 532,
+    "title": "CWE-532: Insertion of Sensitive Information into Log File",
+    "examples": []
+  },
+  {
+    "cwe_id": 320,
+    "title": "CWE CATEGORY: Key Management Errors",
+    "examples": []
+  },
+  {
+    "cwe_id": 426,
+    "title": "CWE-426: Untrusted Search Path",
+    "examples": [
+      {
+        "bad": [
+          "#define DIR \"/restricted/directory\"",
+          "char cmd[500];",
+          "sprintf(cmd, \"ls -l %480s\", DIR);",
+          "RaisePrivileges(...);",
+          "system(cmd);",
+          "DropPrivileges(...);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "MEM_COPY",
+          "ARITH_OP",
+          "UNSAFE_COPY"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 77,
+    "title": "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')",
+    "examples": [
+      {
+        "bad": [
+          "int main(int argc, char** argv) ",
+          "char cmd[CMD_MAX] = \"/usr/bin/cat \";",
+          "strcat(cmd, argv[1]);",
+          "system(cmd);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "UNSAFE_COPY"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 704,
+    "title": "CWE-704: Incorrect Type Conversion or Cast",
+    "examples": [
+      {
+        "bad": [
+          "unsigned int readdata () ",
+          "int amount = 0;",
+          "...",
+          "amount = accessmainframe();",
+          "...",
+          "return amount;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "#define NAME_TYPE 1",
+          "#define ID_TYPE 2",
+          "struct MessageBuffer",
+          "int msgType;",
+          "union ",
+          "char *name;",
+          "int nameID;",
+          ";",
+          ";",
+          "int main (int argc, char **argv) ",
+          "struct MessageBuffer buf;",
+          "char *defaultMessage = \"Hello World\";",
+          "buf.msgType = NAME_TYPE;",
+          "buf.name = defaultMessage;",
+          "printf(\"Pointer of buf.name is %p\\n\", buf.name);",
+          "buf.nameID = (int)(defaultMessage + 1);",
+          "printf(\"Pointer of buf.name is now %p\\n\", buf.name);",
+          "if (buf.msgType == NAME_TYPE) ",
+          "printf(\"Message: %s\\n\", buf.name);",
+          "else ",
+          "printf(\"Message: Use ID %d\\n\", buf.nameID);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 116,
+    "title": "CWE-116: Improper Encoding or Escaping of Output",
+    "examples": []
+  },
+  {
+    "cwe_id": 347,
+    "title": "CWE-347: Improper Verification of Cryptographic Signature",
+    "examples": []
+  },
+  {
+    "cwe_id": 824,
+    "title": "CWE-824: Access of Uninitialized Pointer",
+    "examples": []
+  },
+  {
+    "cwe_id": 693,
+    "title": "CWE-693: Protection Mechanism Failure",
+    "examples": []
+  },
+  {
+    "cwe_id": 352,
+    "title": "CWE-352: Cross-Site Request Forgery (CSRF)",
+    "examples": []
+  },
+  {
+    "cwe_id": 436,
+    "title": "CWE-436: Interpretation Conflict",
+    "examples": []
+  },
+  {
+    "cwe_id": 90,
+    "title": "CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')",
+    "examples": []
+  },
+  {
+    "cwe_id": 290,
+    "title": "CWE-290: Authentication Bypass by Spoofing",
+    "examples": [
+      {
+        "bad": [
+          "sd = socket(AF_INET, SOCK_DGRAM, 0);",
+          "serv.sin_family = AF_INET;",
+          "serv.sin_addr.s_addr = htonl(INADDR_ANY);",
+          "servr.sin_port = htons(1008);",
+          "bind(sd, (struct sockaddr *) & serv, sizeof(serv));",
+          "while (1) ",
+          "memset(msg, 0x0, MAX_MSG);",
+          "clilen = sizeof(cli);",
+          "if (inet_ntoa(cli.sin_addr)==getTrustedAddress()) ",
+          "n = recvfrom(sd, msg, MAX_MSG, 0, (struct sockaddr *) & cli, &clilen);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "MEM_ZERO",
+          "MEMORY_INIT",
+          "SIZE_CHECK",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "struct hostent *hp;struct in_addr myaddr;",
+          "char* tHost = \"trustme.example.com\";",
+          "myaddr.s_addr=inet_addr(ip_addr_string);",
+          "hp = gethostbyaddr((char *) &myaddr, sizeof(struct in_addr), AF_INET);",
+          "if (hp && !strncmp(hp->h_name, tHost, sizeof(tHost))) ",
+          "trusted = true;",
+          " else ",
+          "trusted = false;"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "POINTER_OP",
+          "CONDITIONAL",
+          "SIZE_CHECK",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "BOUNDS_CHECK_PRESENT"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 763,
+    "title": "CWE-763: Release of Invalid Pointer or Reference",
+    "examples": [
+      {
+        "bad": [
+          "char **ap, *argv[10], *inputstring;",
+          "for (ap = argv; (*ap = strsep(&inputstring, \" \\t\")) != NULL;)",
+          "if (**ap != '\\0')",
+          "if (++ap >= &argv[10])",
+          "break;",
+          "/.../",
+          "free(ap[4]);"
+        ],
+        "good": [
+          "void foo()",
+          "BarObj *ptr = new BarObj()",
+          "...",
+          "delete ptr;"
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "ARRAY_ACCESS",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "INC_DEC",
+          "ARITH_OP",
+          "MEM_FREE",
+          "ARRAY_ACCESS"
+        ]
+      },
+      {
+        "bad": [
+          "void foo()",
+          "BarObj *ptr = new BarObj()",
+          "...",
+          "free(ptr);"
+        ],
+        "good": [
+          "void foo()",
+          "BarObj *ptr = new BarObj()",
+          "...",
+          "delete ptr;"
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_FREE"
+        ]
+      },
+      {
+        "bad": [
+          "#define SUCCESS (1)",
+          "#define FAILURE (0)",
+          "int contains_char(char c)",
+          "char *str;",
+          "str = (char*)malloc(20*sizeof(char));",
+          "strcpy(str, \"Search Me!\");",
+          "while( *str != NULL)",
+          "if( *str == c )",
+          "free(str);",
+          "return SUCCESS;",
+          "str = str + 1;",
+          "free(str);",
+          "return FAILURE;"
+        ],
+        "good": [
+          "#define SUCCESS (1)",
+          "#define FAILURE (0)",
+          "int cointains_char(char c)",
+          "char *str;",
+          "int i = 0;",
+          "str = (char*)malloc(20*sizeof(char));",
+          "strcpy(str, \"Search Me!\");",
+          "while( i < strlen(str) )",
+          "if( str[i] == c )",
+          "free(str);",
+          "return SUCCESS;",
+          "i = i + 1;",
+          "free(str);",
+          "return FAILURE;"
+        ],
+        "good_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "MEM_COPY",
+          "UNSAFE_COPY",
+          "CONTROL_FLOW",
+          "ARRAY_ACCESS",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "MEM_FREE",
+          "RETURN",
+          "ARITH_OP",
+          "MEM_FREE",
+          "RETURN"
+        ],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "MEM_COPY",
+          "UNSAFE_COPY",
+          "POINTER_OP",
+          "DEREF",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "MEM_FREE",
+          "RETURN",
+          "ARITH_OP",
+          "MEM_FREE",
+          "RETURN"
+        ]
+      },
+      {
+        "bad": [
+          "char* input = (char*) malloc(40*sizeof(char));",
+          "char *tok;",
+          "char* sep = \" \\t\";",
+          "get_user_input( input );",
+          "tok = strtok( input, sep);",
+          "while( NULL != tok )",
+          "if( isMalformed( tok ) )",
+          "free( tok );",
+          "else",
+          "add_to_command_queue( tok );",
+          "tok = strtok( NULL, sep));"
+        ],
+        "good": [
+          "char* input = (char*) malloc(40*sizeof(char));",
+          "char *tok, *command;",
+          "char* sep = \" \\t\";",
+          "get_user_input( input );",
+          "tok = strtok( input, sep);",
+          "while( NULL != tok )",
+          "if( !isMalformed( command ) )",
+          "command = (char*) malloc( (strlen(tok) + 1) * sizeof(char) );",
+          "strcpy( command, tok );",
+          "add_to_command_queue( command );",
+          "tok = strtok( NULL, sep));",
+          "free( input )"
+        ],
+        "good_features": [
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "CONTROL_FLOW",
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "MEM_COPY",
+          "UNSAFE_COPY",
+          "MEM_FREE"
+        ],
+        "bad_features": [
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "CONTROL_FLOW",
+          "MEM_FREE"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 120,
+    "title": "CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')",
+    "examples": [
+      {
+        "bad": [
+          "char last_name[20];",
+          "printf (\"Enter your last name: \");",
+          "scanf (\"%s\", last_name);"
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY"
+        ]
+      },
+      {
+        "bad": [
+          "void manipulate_string(char * string)",
+          "char buf[24];",
+          "strcpy(buf, string);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "MEM_COPY",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "char buf[24];",
+          "printf(\"Please enter your name and press <Enter>\\n\");",
+          "gets(buf);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY"
+        ]
+      },
+      {
+        "bad": [
+          "...",
+          "struct hostent *clienthp;",
+          "char hostname[MAX_LEN];",
+          "...",
+          "int count = 0;",
+          "for (count = 0; count < MAX_CONNECTIONS; count++) ",
+          "int clientlen = sizeof(struct sockaddr_in);",
+          "int clientsocket = accept(serversocket, (struct sockaddr *)&clientaddr, &clientlen);",
+          "if (clientsocket >= 0) ",
+          "clienthp = gethostbyaddr((char*) &clientaddr.sin_addr.s_addr, sizeof(clientaddr.sin_addr.s_addr), AF_INET);",
+          "strcpy(hostname, clienthp->h_name);",
+          "logOutput(\"Accepted client connection from host \", hostname);",
+          "...",
+          "close(clientsocket);",
+          "close(serversocket);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "NO_FEATURE",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "INC_DEC",
+          "SIZE_CHECK",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "POINTER_OP",
+          "DEREF",
+          "SIZE_CHECK",
+          "ARITH_OP",
+          "MEM_COPY",
+          "POINTER_OP",
+          "ARITH_OP",
+          "UNSAFE_COPY"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 611,
+    "title": "CWE-611: Improper Restriction of XML External Entity Reference",
+    "examples": []
+  },
+  {
+    "cwe_id": 345,
+    "title": "CWE-345: Insufficient Verification of Data Authenticity",
+    "examples": []
+  },
+  {
+    "cwe_id": 93,
+    "title": "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')",
+    "examples": []
+  },
+  {
+    "cwe_id": 601,
+    "title": "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')",
+    "examples": []
+  },
+  {
+    "cwe_id": 706,
+    "title": "CWE-706: Use of Incorrectly-Resolved Name or Reference",
+    "examples": []
+  },
+  {
+    "cwe_id": 172,
+    "title": "CWE-172: Encoding Error",
+    "examples": []
+  },
+  {
+    "cwe_id": 252,
+    "title": "CWE-252: Unchecked Return Value",
+    "examples": [
+      {
+        "bad": [
+          "char buf[10], cp_buf[10];",
+          "fgets(buf, 10, stdin);",
+          "strcpy(cp_buf, buf);"
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "MEM_COPY",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "int returnChunkSize(void *) ",
+          "...",
+          "int main() ",
+          "...",
+          "memcpy(destBuf, srcBuf, (returnChunkSize(destBuf)-1));",
+          "..."
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "MEM_COPY",
+          "ARITH_OP"
+        ]
+      },
+      {
+        "bad": [
+          "buf = (char*) malloc(req_size);",
+          "strncpy(buf, xfer, req_size);"
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "MEM_ALLOC",
+          "POINTER_OP",
+          "DEREF",
+          "INDEX_OP",
+          "ARITH_OP",
+          "MEM_COPY",
+          "INDEX_OP"
+        ]
+      },
+      {
+        "bad": [
+          "char[] byteArray = new char[1024];",
+          "for (IEnumerator i=users.GetEnumerator(); i.MoveNext() ;i.Current()) ",
+          "String userName = (String) i.Current();",
+          "String pFileName = PFILE_ROOT + \"/\" + userName;",
+          "StreamReader sr = new StreamReader(pFileName);",
+          "sr.Read(byteArray,0,1024);",
+          "sr.Close();",
+          "processPFile(userName, byteArray);"
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "MEM_ALLOC",
+          "ARRAY_ACCESS",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "MEM_ALLOC"
+        ]
+      },
+      {
+        "bad": [],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [
+          "Dim MyFile As New FileStream(\"myfile.txt\", FileMode.Open, FileAccess.Read, FileShare.Read)",
+          "Dim MyArray(50) As Byte",
+          "MyFile.Read(MyArray, 0, 50)",
+          "DoDangerousOperation(MyArray(20))"
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "NO_FEATURE"
+        ]
+      },
+      {
+        "bad": [
+          "void host_lookup(char *user_supplied_addr)",
+          "struct hostent *hp;",
+          "in_addr_t *addr;",
+          "char hostname[64];",
+          "in_addr_t inet_addr(const char *cp);",
+          "validate_addr_form(user_supplied_addr);",
+          "addr = inet_addr(user_supplied_addr);",
+          "hp = gethostbyaddr( addr, sizeof(struct in_addr), AF_INET);",
+          "strcpy(hostname, hp->h_name);"
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "SIZE_CHECK",
+          "MEM_COPY",
+          "POINTER_OP",
+          "ARITH_OP",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "void host_lookup(char *user_supplied_addr)",
+          "struct hostent *hp;",
+          "in_addr_t *addr;",
+          "char hostname[64];",
+          "in_addr_t inet_addr(const char *cp);",
+          "validate_addr_form(user_supplied_addr);",
+          "addr = inet_addr(user_supplied_addr);",
+          "hp = gethostbyaddr( addr, sizeof(struct in_addr), AF_INET);",
+          "strcpy(hostname, hp->h_name);"
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "SIZE_CHECK",
+          "MEM_COPY",
+          "POINTER_OP",
+          "ARITH_OP",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "void f(pthread_mutex_t *mutex) ",
+          "pthread_mutex_lock(mutex);",
+          "pthread_mutex_unlock(mutex);"
+        ],
+        "good": [
+          "int f(pthread_mutex_t *mutex) ",
+          "int result;",
+          "result = pthread_mutex_lock(mutex);",
+          "if (0 != result)",
+          "return result;",
+          "return pthread_mutex_unlock(mutex);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW",
+          "RETURN",
+          "RETURN",
+          "UNGUARDED_RETURN"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 909,
+    "title": "CWE-909: Missing Initialization of Resource",
+    "examples": [
+      {
+        "bad": [],
+        "good": [
+          "char *test_string = \"Done at the beginning\";",
+          "if (i != err_val)",
+          "test_string = \"Hello World!\";",
+          "printf(\"%s\", test_string);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [],
+        "good": [
+          "char *test_string = \"Done at the beginning\";",
+          "if (i != err_val)",
+          "test_string = \"Hello World!\";",
+          "printf(\"%s\", test_string);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW"
+        ],
+        "bad_features": []
+      },
+      {
+        "bad": [
+          "char str[20];",
+          "strcat(str, \"hello world\");",
+          "printf(\"%s\", str);"
+        ],
+        "good": [
+          "char *test_string = \"Done at the beginning\";",
+          "if (i != err_val)",
+          "test_string = \"Hello World!\";",
+          "printf(\"%s\", test_string);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW"
+        ],
+        "bad_features": [
+          "ARRAY_ACCESS",
+          "LOCAL_ARRAY",
+          "UNSAFE_COPY"
+        ]
+      },
+      {
+        "bad": [
+          "char *test_string;",
+          "if (i != err_val)",
+          "test_string = \"Hello World!\";",
+          "printf(\"%s\", test_string);"
+        ],
+        "good": [
+          "char *test_string = \"Done at the beginning\";",
+          "if (i != err_val)",
+          "test_string = \"Hello World!\";",
+          "printf(\"%s\", test_string);"
+        ],
+        "good_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW"
+        ],
+        "bad_features": [
+          "POINTER_OP",
+          "DEREF",
+          "ARITH_OP",
+          "CONTROL_FLOW"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 668,
+    "title": "CWE-668: Exposure of Resource to Wrong Sphere",
+    "examples": []
+  },
+  {
+    "cwe_id": 361,
+    "title": "CWE CATEGORY: 7PK - Time and State",
+    "examples": []
+  },
+  {
+    "cwe_id": 281,
+    "title": "CWE-281: Improper Preservation of Permissions",
+    "examples": []
+  },
+  {
+    "cwe_id": 311,
+    "title": "CWE-311: Missing Encryption of Sensitive Data",
+    "examples": [
+      {
+        "bad": [
+          "server.sin_family = AF_INET; hp = gethostbyname(argv[1]);",
+          "if (hp==NULL) error(\"Unknown host\");",
+          "memcpy( (char *)&server.sin_addr,(char *)hp->h_addr,hp->h_length);",
+          "if (argc < 3) port = 80;",
+          "else port = (unsigned short)atoi(argv[3]);",
+          "server.sin_port = htons(port);",
+          "if (connect(sock, (struct sockaddr *)&server, sizeof server) < 0) error(\"Connecting\");",
+          "...",
+          "while ((n=read(sock,buffer,BUFSIZE-1))!=-1) ",
+          "write(dfd,password_buffer,n);",
+          "..."
+        ],
+        "good": [],
+        "good_features": [],
+        "bad_features": [
+          "ARRAY_ACCESS",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "PTR_NULL_CHECK",
+          "MEM_COPY",
+          "POINTER_OP",
+          "DEREF",
+          "INDEX_OP",
+          "ARITH_OP",
+          "CONDITIONAL",
+          "CONTROL_FLOW",
+          "ARRAY_ACCESS",
+          "POINTER_OP",
+          "DEREF",
+          "CONDITIONAL",
+          "SIZE_CHECK",
+          "CONTROL_FLOW",
+          "ARITH_OP",
+          "BOUNDS_CHECK_PRESENT",
+          "CONTROL_FLOW",
+          "ARITH_OP"
+        ]
+      }
+    ]
+  },
+  {
+    "cwe_id": 1021,
+    "title": "CWE-1021: Improper Restriction of Rendered UI Layers or Frames",
+    "examples": []
+  },
+  {
+    "cwe_id": 664,
+    "title": "CWE-664: Improper Control of a Resource Through its Lifetime",
+    "examples": []
+  },
+  {
+    "cwe_id": 275,
+    "title": "CWE CATEGORY: Permission Issues",
+    "examples": []
+  }
+]
