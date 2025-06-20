@@ -18,8 +18,7 @@ with open("cwe_with_features.json", 'r') as f:
 with open("data_with_features_2_2.json",'r') as f:
     data = json.load(f)
 
-for data['cwe_id'], i in data.items():
-    print(data['cwe_id'])
+
 
 
 def extract_tokens(code_line):
@@ -27,6 +26,38 @@ def extract_tokens(code_line):
 
     #print(token)
     return token
+
+cwes = {}
+
+for items in data:
+
+    try:
+        cwe = items['cwe_id']
+        before = items['before']
+    except KeyError:
+        continue
+    if cwe not in cwes:
+        cwes[cwe] = 1
+    else:
+        cwes[cwe] += 1
+
+print(cwes)
+
+lookup = {item['cwe_id']: item for item in cwe_list}
+cwe_train = {}
+cwe_test = {}
+
+
+
+for cwe, count in cwes.items():
+    if count < 5:
+        continue
+    train, test = train_test_split(cwe, test_size=0.3, random_state=42)
+    cwe_train[cwe] = train
+    cwe_test[cwe] = test
+    print(f"CWE-{cwe} has {count}")
+
+print(cwe_train)
 
 def prepare_data2(cwe):
     cwe_bad_sequences = []
@@ -98,6 +129,14 @@ def prepare_data(cwe):
 
 
 trained_models = {}
+
+
+
+
+
+
+
+
 
 encoded_cwes=[]
 for cwe in cwe_list:
@@ -178,8 +217,8 @@ def youre_not_buying_this_are_you(data, ID):
     except ZeroDivisionError:
         print("No tests\n")
 print(trained_cwes)
-for i in trained_cwes:
-    youre_not_buying_this_are_you(data,i)
+#for i in trained_cwes:
+#    youre_not_buying_this_are_you(data,i)
 
 
 
