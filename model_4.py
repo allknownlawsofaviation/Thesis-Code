@@ -142,7 +142,7 @@ def prepare_abstract_train_data(sequences):
 
 
 
-def encode(data):
+def encode(data): #encode sequences from real world data
     encoded_data = defaultdict(list)
     for cwe, sequences in data.items():
         encoded = []
@@ -163,7 +163,7 @@ def encode(data):
 
 
 
-def encoded(data, key):
+def encoded(data, key): #encode sequences scraped from cwe website
     encoded_cwes= defaultdict(list)
 
     for cwe in data:
@@ -209,7 +209,7 @@ def train(combined):
         lengths = [len(seq) for seq in bad_sequences]
         if cwe == 119:
             print(f"lengths: {len(lengths)}")
-        model = hmm.MultinomialHMM(n_components=2, n_iter=200, random_state=42)
+        model = hmm.MultinomialHMM(n_components=3, n_iter=200, random_state=42)
         #print(cwe)
         model.fit(X, lengths)
         trained_models[cwe] = model
@@ -284,11 +284,14 @@ def youre_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_models,
         for seq in sequences:
 
             score,safe_score  = classify(seq,trained_models,feature_map, cwe, safe_model)
-            print(f"for the bad code, unsafe score: {score} safe score: {safe_score}")
-            if score > safe_score:
+
+            if abs(score) < abs(safe_score):
                 true_positives += 1
+                print(f"for the bad code, unsafe score: {score} safe score: {safe_score} true positive")
             else:
                 false_negatives += 1
+
+                print(f"for the bad code, unsafe score: {score} safe score: {safe_score} false negative")
             positive_items += 1
 
     if not positive_items:
@@ -299,11 +302,15 @@ def youre_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_models,
         for seq in sequences:
 
             score,safe_score  = classify(seq,trained_models,feature_map, cwe, safe_model)
-            print(f"for the good code, unsafe score: {score} safe score: {safe_score}")
-            if score > safe_score:
+
+            if abs(score) < abs(safe_score):
                 false_positives += 1
+
+                print(f"for the good code, unsafe score: {score} safe score: {safe_score} false positive")
             else:
                 true_negatives += 1
+
+                print(f"for the good code, unsafe score: {score} safe score: {safe_score} true negative")
             negative_items +=1
 
     print(f"for CWE-{ID}")

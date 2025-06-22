@@ -416,7 +416,7 @@ def classify2(seq, models, vocab, cwe):
 
     final_state = models[cwe].predict(X)
     print(f"final_state={final_state}")
-    probs, states = models[cwe].sample(1, currstate=final_state[-1])
+    probs, states = models[cwe].sample(n_samples =1, currstate=final_state[-1])
     print(f"probs {probs}, {states}")
     return probs[0,UNSAFE_ID],probs[0,SAFE_ID]
 
@@ -435,7 +435,7 @@ def youre_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_models)
             continue
         for seq in sequences:
 
-            score,safe_score  = classify2(seq,trained_models,feature_map, cwe)
+            score,safe_score  = classify(seq,trained_models,feature_map, cwe)
             print(f"for the bad code, unsafe score: {score} safe score: {safe_score}")
             if score > safe_score:
                 true_positives += 1
