@@ -12,9 +12,11 @@ SAFE_ID = 0
 UNSAFE_ID = 1
 OUT_OF_VOCAB_ID = 2
 feature_map = {"SAFE": SAFE_ID, "UNSAFE": UNSAFE_ID,"OUT_OF_VOCAB": OUT_OF_VOCAB_ID}
-abstract_feature_map = {}
+
+abstract = False
+#abstract_feature_map = {"SAFE": SAFE_ID, "UNSAFE": UNSAFE_ID,"OUT_OF_VOCAB": OUT_OF_VOCAB_ID}
 counter = 0
-abstract = True
+
 
 with open("cwe_with_features.json", 'r') as f:
     cwe_list = json.load(f)
@@ -138,14 +140,18 @@ def extract_tokens(code_line, keywords):
 
 def real_world(data, key):
     cwes = defaultdict(list)
+    unknown = []
     for items in data:
-        try:
-            cwe = items['cwe_id']
+        cwe = items.get('cwe_id')
+        if cwe:
             cwes[cwe].append(items[key])
-
-        except KeyError:
-            continue
-    return cwes
+        else:
+            data = {
+                "commit_id":items['commit_id'],
+                "code":items[key]
+            }
+            unknown.append(data)
+    return cwes, unknown
 
 
 
@@ -328,7 +334,7 @@ def train(combined):
 #        if cwe == 119:
 #            print(f"lengths: {len(lengths)}")
 
-        model = hmm.MultinomialHMM(n_components=3, n_iter=200, random_state=42)
+        model = hmm.MultinomialHMM(n_components=8, n_iter=200, random_state=42)
         #print(cwe)
         model.fit(X, lengths)
         trained_models[cwe] = model
@@ -346,12 +352,9 @@ def train_saftey_tester(combined):
 
 def classify_sequence(seq, models, vocab):
     encoded_list = []
-    for line in seq:
-        sequence = extract_tokens(line,keywords)
-        encoded = [vocab[token] for token in sequence if token in vocab]
-        if not encoded:
-            continue
-        encoded_list.extend(encoded)
+    sequence = trees(seq)
+    encoded = [vocab[token] for token in sequence if token in vocab]
+    encoded_list.extend(encoded)
     if not encoded_list:
         return "Unclasfied",{}  # or a default label
 
@@ -366,8 +369,8 @@ def classify_sequence(seq, models, vocab):
             continue  # can't score
     sorted_scores = sorted(scores, key=lambda x: x[0])
 
-    best_cwe =scores[0][1]
-    return best_cwe,sorted_scores[1][1]
+    best_cwe = sorted_scores[1][0]
+    return best_cwe,sorted_scores
 
 
 def classify(seq, models, vocab, cwe):
@@ -398,7 +401,7 @@ def classify(seq, models, vocab, cwe):
     return score,safe_score
 
 
-def classify2(seq, models, vocab, cwe):
+def classify2(seq, models, vocab, cwe,n):
     encoded_list = []
     for line in seq:
         sequence = extract_tokens(line,keywords)
@@ -421,7 +424,7 @@ def classify2(seq, models, vocab, cwe):
     #print(f"final_state={final_state}")
     final =final_state[-1]
 #    print(final)
-    probs, states = models[cwe].sample(1,random_state=None, currstate=final)
+    probs, states = models[cwe].sample(n,random_state=None, currstate=final)
 #    print(f"probs {probs},states {states}")
     return probs,states
 
@@ -440,13 +443,15 @@ def youre_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_models)
             continue
         for seq in sequences:
 
-            X, state_sequence = classify2(seq,trained_models,feature_map, cwe)
+            X, state_sequence = classify2(seq,trained_models,feature_map, cwe,50)
             if isinstance(state_sequence,float):
                 continue
           #  print(f"for the bad code, unsafe score: {state_sequence}")
-          #  most = max(set(state_sequence), key=state_sequence.tolist().count)
-            if state_sequence[0] ==1:
+            unsafe_score, safe_score = classify(seq,trained_models,feature_map,cwe)
+            most = max(set(state_sequence), key=state_sequence.tolist().count)
+            if abs(unsafe_score) <abs(safe_score):
                 true_positives += 1
+
             else:
                 false_negatives += 1
             positive_items += 1
@@ -458,12 +463,13 @@ def youre_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_models)
             continue
         for seq in sequences:
 
-            X,state_sequence  = classify2(seq,trained_models,feature_map, cwe)
+            X,state_sequence  = classify2(seq,trained_models,feature_map, cwe,50)
             if isinstance(state_sequence,float):
                 continue
           #  print(f"for the good code, unsafe score: {state_sequence}")
-          #  most = max(set(state_sequence), key=state_sequence.tolist().count)
-            if state_sequence[0] == 0:
+            unsafe_score, safe_score = classify(seq,trained_models,feature_map,cwe)
+            most = max(set(state_sequence), key=state_sequence.tolist().count)
+            if abs(unsafe_score) <abs(safe_score):
                 false_positives += 1
             else:
                 true_negatives += 1
@@ -480,8 +486,10 @@ def youre_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_models)
     print(f"best accuracy {accuracy}%")
     recall = (true_positives * 100.0) / max(positive_items, 1)
     precision = (true_negatives * 100.0) / max(negative_items, 1)
-    print(f"recall {recall}%, precision {precision}%\n")
-
+    F1 = (2*precision*recall)/max(precision+recall,1)
+    num_examples = positive_items+negative_items
+    print(f"recall {recall}%, precision {precision}%")
+    print(f"{ID}&{positive_items}&{negative_items}&{num_examples}&{false_positives}&{false_negatives}&{accuracy:.2f}&{recall:.2f}&{precision:.2f}&{F1:.2f}\\\\")
 
 def you_are_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_models):
     positive_items = 0
@@ -497,9 +505,9 @@ def you_are_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_model
             continue
         for seq in sequences:
 
-            score,safe_score  = classify2(seq,trained_models,feature_map, cwe)
+            unsafe_score,safe_score  = classify2(seq,trained_models,feature_map, cwe)
             print(f"for the bad code, unsafe score: {score} safe score: {safe_score}")
-            if score > safe_score:
+            if abs(unsafe_score) < abs(safe_score):
                 true_positives += 1
             else:
                 false_negatives += 1
@@ -514,7 +522,7 @@ def you_are_not_buying_any_of_this_are_you(good_data, bad_data, ID,trained_model
 
             score,safe_score  = classify2(seq,trained_models,feature_map, cwe)
             print(f"for the good code, unsafe score: {score} safe score: {safe_score}")
-            if score > safe_score:
+            if abs(unsafe_score) < abs(safe_score):
                 false_positives += 1
             else:
                 true_negatives += 1
@@ -556,32 +564,61 @@ def youre_not_buying_this_are_you(data, ID, trained_models):
 
 
 
+def raw_tokens(data):
+    abstract = False
+    real_world_bad, unknown_bad = real_world(data,'before')
+    real_world_good, unknown_good = real_world(data,'after')
 
-real_world_bad = real_world(data,'before')
-real_world_good = real_world(data,'after')
+    real_world_good_train, real_world_good_test = split_real_world(real_world_good)
 
-real_world_good_train, real_world_good_test = split_real_world(real_world_good)
-
-real_world_bad_train, real_world_bad_test = split_real_world(real_world_bad)
-
-
-encoded_cwe_bad = encoded(cwe_list,'bad', UNSAFE_ID)
-
-encoded_real_world_good_train = encode(real_world_good_train, SAFE_ID)
-encoded_real_world_bad_train = encode(real_world_bad_train, UNSAFE_ID)
-print(feature_map)
-combined_bad = combine(encoded_real_world_bad_train,encoded_real_world_good_train, encoded_cwe_bad)
-
-#trained_models_good = train(combined_good)
-trained_models_bad = train(combined_bad)
+    real_world_bad_train, real_world_bad_test = split_real_world(real_world_bad)
 
 
-print(trained_cwes)
-print(len(feature_map))
-for i in trained_cwes:
-    youre_not_buying_any_of_this_are_you(real_world_good_test,real_world_bad_test,i,trained_models_bad)
+    encoded_cwe_bad = encoded(cwe_list,'bad', UNSAFE_ID)
+
+    encoded_real_world_good_train = encode(real_world_good_train, SAFE_ID)
+    encoded_real_world_bad_train = encode(real_world_bad_train, UNSAFE_ID)
+    print(feature_map)
+    combined_bad = combine(encoded_real_world_bad_train,encoded_real_world_good_train, encoded_cwe_bad)
+
+    #trained_models_good = train(combined_good)
+    trained_models_bad = train(combined_bad)
+
+
+    print(len(trained_cwes))
+    print(len(feature_map))
+#    find_unknown(unknown_bad,trained_models_bad)
+    for i in trained_cwes:
+        youre_not_buying_any_of_this_are_you(real_world_good_test,real_world_bad_test,i,trained_models_bad)
+
+
+def find_unknown(unknown,models):
+    for items in unknown:
+        code = items['code']
+        if len(code) <5:
+            continue
+        commit = items['commit_id']
+        candidates = []
+        max_candidate = 0
+        max_count = 0
+        best,sorted_scores = classify_sequence(code,models,feature_map)
+        for cwe in trained_cwes:
+            probs,sequences = classify2(code,models,feature_map,cwe,30)
+            count_ones = sequences.tolist().count(1)
+            if count_ones > max_count:
+                max_count = count_ones
+                max_candidate = cwe
+            if count_ones == max_count:
+                candidates.append(cwe)
+        try:
+            print(f"for commit: {commit} lowest scores are:{' '.join(str(sorted_scores[i][1]) for i in range(5))}")
+            print(f"potential matches are:{str(max_candidate)}")
+        except KeyError:
+            print(sorted_scores)
+    print(len(unknown))
+
+real_world_bad, unknown_bad = real_world(data,'before')
 
 
 
-
-
+raw_tokens(data)

@@ -371,12 +371,13 @@ combined_bad = combine(encoded_real_world_bad_train, encoded_cwe_bad)
 trained_models_bad = train(combined_bad)
 trained_safe_model = train(encoded_real_world_good_train)
 
-print(trained_cwes)
+
 print(len(feature_map))
 #for i in trained_cwes:
 youre_not_buying_any_of_this_are_you(real_world_good_test,real_world_bad_test,119,trained_models_bad, trained_safe_model)
 
 
+print(trained_cwes)
 
 
 
