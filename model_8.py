@@ -535,7 +535,7 @@ def train(combined):
 #        if cwe == 119:
 #            print(f"lengths: {len(lengths)}")
 
-        model = hmm.MultinomialHMM(n_components=5, n_iter=100, random_state=42)
+        model = hmm.MultinomialHMM(n_components=6, n_iter=100, random_state=42)
 #        model.startprob_ = np.array([1.0,0.0,0.0])
         model.fit(X, lengths)
         trained_models[cwe] = model
@@ -834,7 +834,9 @@ def print_results(ID,false_positives, false_negatives, true_positives, true_nega
 
     print(f"false positives {false_positives}")
     print(f"false negatives {false_negatives}")
-    accuracy = (true_positives+true_negatives) / max(positive_items+negative_items,1)
+
+    accuracy = (true_positives+true_negatives)/(true_negatives+false_positives+false_negatives+true_positives)
+#    accuracy = (true_positives+true_negatives) / max(positive_items+negative_items,1)
     print(f"best accuracy {accuracy*100.0}%")
     if true_positives ==0:
         recall =0
@@ -988,7 +990,7 @@ def test_with_predict(good_data,bad_data, ID, models, w2v_model):
                 X = np.array(encoded_sequence).reshape(-1, 1)
                 state= models[cwe].predict(X, lengths=len(encoded_sequence))
                 final_state = state[-1]
-                if final_state == 0:
+                if final_state == 1:
                     false_positives += 1
                 else:
                     true_negatives += 1
