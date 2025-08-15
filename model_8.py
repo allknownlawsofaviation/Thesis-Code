@@ -1,13 +1,15 @@
 import json
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 from hmmlearn import hmm
 from sklearn.model_selection import train_test_split
 import re
 from collections import defaultdict
+from collections import Counter
 from gensim.models import Word2Vec
 from tree_sitter import Language, Parser
-
+from sklearn.metrics import f1_score
 #import tree_sitter_cpp as tscpp
 import pathlib, re
 SAFE_ID = 0
@@ -514,33 +516,55 @@ def massageX(sequences):
     extended = np.concatenate([np.array(seq+[seq[-1]]*(length-len(seq))).reshape(-1,1) for seq in sequences])
 
     return [length for seq in sequences],  extended
+#    return lengths, extended
 
-
-def train(combined):
+def train(combined, states):
     trained_models = {}
 
     for cwe, bad_sequences in combined.items():
-#        if cwe != 119:
-#            continue
 
         if len(bad_sequences) <2:
             continue
         if cwe not in trained_cwes:
             trained_cwes.append(cwe)
-#        X = np.concatenate([np.array(seq).reshape(-1, 1) for seq in bad_sequences])
         lengths, X = massageX(bad_sequences)
 
 
-#        lengths = [len(seq) for seq in bad_sequences]
-#        if cwe == 119:
-#            print(f"lengths: {len(lengths)}")
 
-        model = hmm.MultinomialHMM(n_components=6, n_iter=100, random_state=42)
-#        model.startprob_ = np.array([1.0,0.0,0.0])
+        model = hmm.MultinomialHMM(n_components=states, n_iter=100, random_state=42)
         model.fit(X, lengths)
         trained_models[cwe] = model
     return trained_models
 
+def find_best_n_states(combined, vocab_size, min_states=2, max_states=10):
+    best_states = {}
+    for cwe,sequences in combined.items():
+        best_aic = float('inf')
+        best_n = min_states
+        scores = {}
+        if len(sequences) < 2:
+            continue
+        lengths, X = massageX(sequences)
+
+        for n in range(min_states, max_states+1):
+            model = hmm.MultinomialHMM(n_components=n, n_iter=100,algorithm="map", random_state=42)
+#            model.n_features = vocab_size
+            model.fit(X, lengths)
+
+            logL = model.score(X, lengths)
+#            k = n * (n - 1) + n * vocab_size  # params for transitions + emissions
+            k = (n - 1) + n * (n - 1) + n * (vocab_size - 1)
+            N = sum(lengths)
+            bic = - 2 * logL + k * np.log(N)
+            aic = -2* logL+2*k
+            aic = model.aic(X, lengths)
+            scores[n] = aic
+            if aic < best_aic:
+                best_aic = aic
+                best_n = n
+        best_states[cwe] = best_n
+        print(f"CWE-{cwe}: best_n:{best_n},scores {scores} ")
+    return best_states
 
 def train_saftey_tester(combined):
     X = np.concatenate([np.array(seq).reshape(-1,1) for sequences in combined.values() for seq in sequences])
@@ -651,6 +675,55 @@ def encode_test_sample(seq, vocab, w2v_model):
 #        print(encoded_list)
         unk_ratio = encoded_list.count(OUT_OF_VOCAB_ID) / max(len(encoded_list),1)
         return encoded_list, unk_ratio
+
+
+def state_usage_means(seq,model,cwe, n_samples=1000):
+    model[cwe].n_trials = len(seq)
+    _, states = model[cwe].sample(n_samples)
+    unique, counts = np.unique(states, return_counts=True)
+    return counts / counts.sum()  # fraction per state
+
+def graph_hidden_statess(train_data,models):
+    state_means_per_cwe = {}
+    for cwe, seq in train_data.items():
+        means = state_usage_means(seq,models,cwe, n_samples=5000)
+        state_means_per_cwe[cwe] = means
+
+# Plot all CWEs on one graph
+    for cwe, means in state_means_per_cwe.items():
+        plt.plot(range(len(means)), means, marker='o', label=f"CWE-{cwe}")
+    plt.xlabel("Hidden State Index")
+    plt.ylabel("Mean Fraction of Samples")
+    plt.title("State Usage Means per CWE")
+    plt.legend()
+    plt.show()
+
+
+def state_usage_means_real_data(seq_list, model):
+    state_counts = np.zeros(model.n_components)
+    total_states = 0
+    for seq in seq_list:
+        X = np.array(seq).reshape(-1, 1)
+        states = model.predict(X)
+        for s in states:
+            state_counts[s] += 1
+        total_states += len(states)
+    return state_counts / total_states if total_states > 0 else state_counts
+
+def graph_hidden_states(train_data, models):
+    state_means_per_cwe = {}
+    for cwe, seq_list in train_data.items():
+        means = state_usage_means_real_data(seq_list, models[cwe])
+        state_means_per_cwe[cwe] = means
+
+    # Plot all CWEs on one graph
+    for cwe, means in state_means_per_cwe.items():
+        plt.plot(range(len(means)), means, marker='o', label=f"CWE-{cwe}")
+    plt.xlabel("Hidden State Index")
+    plt.ylabel("Mean Fraction of Occurrences")
+    plt.title("State Usage per CWE (Decoded from Real Data)")
+    plt.legend()
+    plt.show()
 
 def z_score_confidence(good_data,bad_data, model, vocab, data_type,w2v_model):
     cwe_mean = {}
@@ -778,7 +851,7 @@ def testing_with_decoding(good_data, bad_data, ID,trained_models,w2v_model,n):
             #  print(f"for the bad code, unsafe score: {state_sequence}")
             most = max(set(states), key=states.tolist().count)
             unsafe_count = (states == 1).sum()
-            print(f" unsafe chance :{unsafe_count/n}")
+#            print(f" unsafe chance :{unsafe_count/n}")
             #print(f"'unsafe'{most}")
             if most ==1:
                 true_positives +=1
@@ -806,7 +879,7 @@ def testing_with_decoding(good_data, bad_data, ID,trained_models,w2v_model,n):
             #print(states)
             most = max(set(states), key=states.tolist().count)
             safe_count = (states ==0).sum()
-            print(f"safe:{safe_count/n}")
+#            print(f"safe:{safe_count/n}")
             if most == 1:
                 false_positives += 1
             if most ==0:
@@ -823,8 +896,99 @@ def testing_with_decoding(good_data, bad_data, ID,trained_models,w2v_model,n):
     print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
 
 
+def identify_unsafe_state(ID, good_data, bad_data, model, vocab, w2v_model):
+    """
+    Identify which hidden state is most correlated with unsafe sequences for this CWE.
+    """
+    state_counts_safe = Counter()
+    state_counts_unsafe = Counter()
+    for sequence in good_data.get(ID, []):
+        encoded = encode_with_w2v(sequence, feature_map,w2v_model, OUT_OF_VOCAB_ID)
+        if not encoded:
+            continue
+        X = np.array(encoded).reshape(-1, 1)
+        states = model.predict(X)
+        state_counts_safe.update(states)
+
+    for sequence in bad_data.get(ID,[]):
+        encoded = encode_with_w2v(sequence, feature_map, w2v_model, OUT_OF_VOCAB_ID)
+        if not encoded:
+            continue
+
+        X = np.array(encoded).reshape(-1, 1)
+        states = model.predict(X)
+        state_counts_unsafe.update(states)
+
+    unsafe_ratios ={}
+    for s in set(state_counts_safe.keys()) | set(state_counts_unsafe.keys()):
+        total = state_counts_safe[s] + state_counts_unsafe[s]
+        if total > 0:
+            unsafe_ratios[s] = state_counts_unsafe[s] / total
+        else:
+            unsafe_ratios[s] = 0.0
+
+    if not unsafe_ratios:
+        print(f"[WARN] No states found for CWE-{ID}")
+        return None, {}
 
 
+    unsafe_state = max(unsafe_ratios, key=unsafe_ratios.get)
+    return unsafe_state, unsafe_ratios
+
+def test_with_state_mapping(good_data, bad_data, ID, model, vocab, w2v_model):
+    # Step 1: figure out unsafe state for CWE
+    unsafe_state, state_ratios = identify_unsafe_state(ID, good_data, bad_data, model, vocab,w2v_model)
+    print(f"[DEBUG] CWE-{ID} unsafe state: {unsafe_state}, ratios: {state_ratios}")
+    positive_items = negative_items = 0
+    false_positives = false_negatives = true_positives = true_negatives = 0
+
+    for sequence in bad_data.get(ID,[]):
+        encoded = encode_with_w2v(sequence, vocab, w2v_model, OUT_OF_VOCAB_ID)
+        if not encoded:
+            continue
+        X = np.array(encoded).reshape(-1, 1)
+        states = model.predict(X)
+        most_common = Counter(states).most_common(1)[0][0]
+        if most_common == unsafe_state:
+            true_positives += 1
+        else:
+            false_negatives += 1
+        positive_items += 1
+
+    for sequence in good_data.get(ID,[]):
+        encoded = encode_with_w2v(sequence, vocab, w2v_model, OUT_OF_VOCAB_ID)
+        if not encoded:
+            continue
+        X = np.array(encoded).reshape(-1, 1)
+        states = model.predict(X)
+        most_common = Counter(states).most_common(1)[0][0]
+        if most_common == unsafe_state:
+            false_positives += 1
+        else:
+            true_negatives += 1
+        negative_items += 1
+
+    print("Test With State Mapping")
+#    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
+
+    F1 = calculate_F1(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
+    return F1
+
+def calculate_F1(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items):
+    if true_positives+true_negatives == 0:
+        accuracy = 0.0
+    else:
+        accuracy = (true_positives+true_negatives)/(true_negatives+false_positives+false_negatives+true_positives)
+    if true_positives ==0:
+        recall =0.0
+    else:
+        recall = (true_positives)/(true_positives+false_negatives)
+    if true_positives == 0:
+        precision =0.0
+    else:
+        precision = (true_positives) /(true_positives+false_positives)
+    F1 = (2*precision*recall)/max(precision+recall,1)
+    return F1
 
 def print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items):
     print(f"CWE-{ID}:")
@@ -834,20 +998,22 @@ def print_results(ID,false_positives, false_negatives, true_positives, true_nega
 
     print(f"false positives {false_positives}")
     print(f"false negatives {false_negatives}")
-
-    accuracy = (true_positives+true_negatives)/(true_negatives+false_positives+false_negatives+true_positives)
+    if true_positives+true_negatives == 0:
+        accuracy = 0.0
+    else:
+        accuracy = (true_positives+true_negatives)/(true_negatives+false_positives+false_negatives+true_positives)
 #    accuracy = (true_positives+true_negatives) / max(positive_items+negative_items,1)
     print(f"best accuracy {accuracy*100.0}%")
     if true_positives ==0:
-        recall =0
+        recall =0.0
     else:
-        recall = (true_positives)/max(true_positives+false_negatives,1)
+        recall = (true_positives)/(true_positives+false_negatives)
 #    recall = (true_positives ) / max(positive_items, 1)
 #    precision = (true_negatives ) / max(negative_items, 1)
     if true_positives == 0:
-        precision =0
+        precision =0.0
     else:
-        precision = (true_positives) /max(true_positives+false_positives,1)
+        precision = (true_positives) /(true_positives+false_positives)
     F1 = (2*precision*recall)/max(precision+recall,1)
     num_examples = positive_items+negative_items
     print(f"recall {recall*100.0}%, precision {precision*100.0}%")
@@ -895,7 +1061,7 @@ def testing_with_scoring(good_data, bad_data, ID,trained_models,w2v_model):
     print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
 
 
-def test_with_rank(good_data,bad_data, ID, models, w2v_model):
+def test_with_rank(good_data,bad_data, ID, models, w2v_model, thresh):
 
     positive_items = 0
     negative_items = 0
@@ -905,101 +1071,77 @@ def test_with_rank(good_data,bad_data, ID, models, w2v_model):
     true_positives = 0
     true_negatives = 0
     results = []
-    for cwe, sequences in bad_data.items():
-        if cwe != ID:
-            continue
-        for seq in sequences:
-            best_cwe, sorted_scores = classify_sequence(seq,models,feature_map, w2v_model)
-            if best_cwe and sorted_scores:
-                positive_items +=1
-                if best_cwe ==ID:
-                    true_positives +=1
-                for rank, (score, cwe) in enumerate(sorted_scores, start=1):
-                    if cwe == ID:
-                        is_within_rank = rank <= 5
-                if is_within_rank:
-                        true_positives += 1
-                else:
-                    false_negatives += 1
-
-            else:
-                continue
-
-    if not positive_items:
-        return
-    for cwe, sequences in good_data.items():
-        if cwe != ID:
-            continue
-        for seq in sequences:
-            best_cwe,sorted_scores  = classify_sequence(seq,models,feature_map, w2v_model)
-
-            if best_cwe and sorted_scores:
-
-                negative_items +=1
-
-                for rank, (score, cwe) in enumerate(sorted_scores, start=1):
-                    if cwe == ID:
-                        is_within_rank = rank <= 5
-                if is_within_rank:
-                    false_positives +=1
-                else:
-                    true_negatives += 1
-
-            else:
-                continue
-    print("Rank method:")
-    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
-
-
-def test_with_predict(good_data,bad_data, ID, models, w2v_model):
-    positive_items = 0
-    negative_items = 0
-    num_examples = 0
-    false_positives = 0
-    false_negatives = 0
-    true_positives = 0
-    true_negatives = 0
-    results = []
-    for cwe, sequences in bad_data.items():
-        if cwe != ID:
-            continue
-        for seq in sequences:
+    for sequence in bad_data.get(ID, []):
+        best_cwe, sorted_scores = classify_sequence(sequence,models,feature_map, w2v_model)
+        if best_cwe and sorted_scores:
             positive_items +=1
-            encoded_sequence = encode_with_w2v(seq, feature_map, w2v_model, OUT_OF_VOCAB_ID)
-            if encoded_sequence:
-                X = np.array(encoded_sequence).reshape(-1, 1)
-                state= models[cwe].predict(X, lengths=len(encoded_sequence))
-                final_state = state[-1]
-                if final_state == 1:
+            if best_cwe ==ID:
+                true_positives +=1
+            for rank, (score, cwe) in enumerate(sorted_scores, start=1):
+                if cwe == ID:
+                    is_within_rank = rank <= thresh
+            if is_within_rank:
                     true_positives += 1
-                else:
-                    false_negatives += 1
+            else:
+                false_negatives += 1
 
-
+        else:
+            continue
 
     if not positive_items:
         return
-    for cwe, sequences in good_data.items():
-        if cwe != ID:
-            continue
-        for seq in sequences:
+    for sequence in good_data.get(ID,[]):
+        best_cwe,sorted_scores  = classify_sequence(sequence,models,feature_map, w2v_model)
+
+        if best_cwe and sorted_scores:
+
             negative_items +=1
-            encoded_sequence = encode_with_w2v(seq, feature_map, w2v_model, OUT_OF_VOCAB_ID)
-            if encoded_sequence:
 
-                X = np.array(encoded_sequence).reshape(-1, 1)
-                state= models[cwe].predict(X, lengths=len(encoded_sequence))
-                final_state = state[-1]
-                if final_state == 1:
-                    false_positives += 1
-                else:
-                    true_negatives += 1
+            for rank, (score, cwe) in enumerate(sorted_scores, start=1):
+                if cwe == ID:
+                    is_within_rank = rank <= thresh
+            if is_within_rank:
+                false_positives +=1
+            else:
+                true_negatives += 1
 
-    print("Predict method")
-    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
+        else:
+            continue
+    print("Rank method:")
+#    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
+    F1 = calculate_F1(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
+    return F1
 
+def find_best_n_states_f1(train_data,good_data, bad_data, vocab, w2v_model, min_states=2, max_states=10, n_samples=1000):
+    best_states = {}
 
+    for cwe, sequences in train_data.items():
 
+        if len(sequences) <2:
+            continue
+        lengths, X = massageX(sequences)
+
+        best_f1 = -1
+        best_n = min_states
+
+        for n in range(min_states, max_states + 1):
+            model = hmm.MultinomialHMM(n_components=n, n_iter=100, random_state=42)
+
+            model.fit(X, lengths)
+
+            # Identify unsafe state
+            F1= test_with_state_mapping(good_data, bad_data, cwe,model,vocab,w2v_model)
+
+            # Validation step
+
+            if F1 > best_f1:
+                best_f1 =F1
+                best_n = n
+
+        best_states[cwe] = best_n
+        print(f"CWE-{cwe}: best_n={best_n}, best_f1={best_f1:.3f}")
+
+    return best_states
 
 def raw_tokens(data):
 
@@ -1019,9 +1161,12 @@ def raw_tokens(data):
     encoded_real_world_bad_train = encode(real_world_bad_train, UNSAFE_ID)
     combined_bad = combine(encoded_real_world_bad_train,encoded_real_world_good_train, encoded_cwe_bad)
     real_world_bad, unknown_bad = real_world(data,'before')
-    #trained_models_good = train(combined_good)
-    trained_models_bad = train(combined_bad)
+    #find best states space and train models:
+
+    trained_models_bad = train(combined_bad,5)
     w2v_model = train_word2vec(mother_of_all_sequences, vector_size=50, min_count=1, window=5)
+
+    find_best_n_states_f1(combined_bad, real_world_good_test, real_world_bad_test,feature_map,w2v_model)
     print(len(trained_cwes))
     print(len(feature_map))
 #    print("Confidence Ratios Test data:")
@@ -1030,12 +1175,12 @@ def raw_tokens(data):
 #    results_train_data = z_score_confidence(encoded_real_world_good_train, encoded_real_world_bad_train, trained_models_bad, feature_map,"train", w2v_model)
 #    for cwe, result in results_test_data.items():
 #        print(f"{cwe}&{results_train_data[cwe][0]:.2f}&{result[0]:.2f}&{result[1]:.2f}\\\\")
-
-    for i in trained_cwes:
-        testing_with_decoding(real_world_good_test,real_world_bad_test,i,trained_models_bad, w2v_model, 100)
-        test_with_predict(real_world_good_test,real_world_bad_test,i, trained_models_bad, w2v_model)
-        test_with_rank(real_world_good_test,real_world_bad_test,i,trained_models_bad,w2v_model)
-        print("-------------------------------------------------------\n")
+    graph_hidden_states(combined_bad,trained_models_bad)
+#    for i in trained_cwes:
+#        test_with_state_mapping(real_world_good_test,real_world_bad_test,i,trained_models_bad,feature_map, w2v_model)
+#        test_with_predict(real_world_good_test,real_world_bad_test,i, trained_models_bad, w2v_model)
+#        test_with_rank(real_world_good_test,real_world_bad_test,i,trained_models_bad,w2v_model, 2)
+#        print("-------------------------------------------------------\n")
 
 #    find_unknown(unknown_bad,trained_models_bad)
 
