@@ -531,7 +531,7 @@ def train(combined, states):
 
 
 
-        model = hmm.MultinomialHMM(n_components=states, n_iter=100, random_state=42)
+        model = hmm.MultinomialHMM(n_components=states[cwe], n_iter=100, random_state=42)
         model.fit(X, lengths)
         trained_models[cwe] = model
     return trained_models
@@ -566,14 +566,6 @@ def find_best_n_states(combined, vocab_size, min_states=2, max_states=10):
         print(f"CWE-{cwe}: best_n:{best_n},scores {scores} ")
     return best_states
 
-def train_saftey_tester(combined):
-    X = np.concatenate([np.array(seq).reshape(-1,1) for sequences in combined.values() for seq in sequences])
-    lengths = [len(seq) for sequences in combined.values() for seq in sequences]
-
-    model = hmm.MultinomialHMM(n_components=3, n_iter=200, random_state=42)
-
-    model.fit(X, lengths)
-    return model
 
 def improved_tokenizer(sequences, vocab):
     regex_tokens = []
@@ -777,123 +769,7 @@ def z_score_confidence(good_data,bad_data, model, vocab, data_type,w2v_model):
         results[cwe] = (outlier_density,OOV_density)
     return results
 
-def outliers(data, model,vocab, data_type, n):
 
-    for cwe, sequences in data.items():
-            count = 0
-            for seq in sequences:
-                match data_type:
-                    case "test":
-
-                        encoded_list = []
-
-                        sequence = trees(seq)
-                        encoded = []
-                        for token in sequence:
-                            if token in vocab:
-                                encoded.append(vocab[token])
-                            if token not in vocab:
-                                encoded.append(OUT_OF_VOCAB_ID)
-                            if not encoded:
-                                continue
-                        encoded_list.extend(encoded)
-                        if not encoded_list:
-                            continue  # or a default label
-                        unk_ratio = encoded_list.count(OUT_OF_VOCAB_ID) /len(encoded_list)
-
-                    #   if unk_ratio > 0.4:
-                    #        print("likely an outlier")
-                        X = np.array(encoded_list).reshape(-1, 1)
-
-                    case "train":
-                        X = np.array(seq).reshape(-1, 1)
-
-                final_state = model[cwe].predict(X)[-1]
-                model[cwe].n_trials = len(seq)
-
-                probs, sample_states = model[cwe].sample(n, currstate = final_state)
-
-                unsafe_count = (sample_states == 1).sum()
-                safe_count = (sample_states == 0).sum()
-
-                confidence = unsafe_count / n
-                print(confidence)
-                is_outlier = confidence < 0.3
-                if is_outlier:
-                    print(confidence)
-                    count +=1
-       #         if unsafe_count > safe_count:
-        #            print(f"unsafe {is_outlier}")
-        #        else:
-        #            print(f"safe {is_outlier}")
-            print(f"for CWE-{cwe} outlier raio is {count/max(len(sequences),1)}")
-
-
-def testing_with_decoding(good_data, bad_data, ID,trained_models,w2v_model,n):
-    positive_items = 0
-    negative_items = 0
-    num_examples = 0
-    false_positives = 0
-    false_negatives = 0
-    true_positives = 0
-    true_negatives = 0
-    results = []
-    for cwe, sequences in bad_data.items():
-        if cwe != ID:
-            continue
-        for seq in sequences:
-            best_cwe, sorted_scores = classify_sequence(seq,trained_models,feature_map, w2v_model)
-
-            probs, states = classify2(seq, trained_models,feature_map,cwe,n,w2v_model)
-            #print(states)
-            if isinstance(states,float):
-                continue
-            #  print(f"for the bad code, unsafe score: {state_sequence}")
-            most = max(set(states), key=states.tolist().count)
-            unsafe_count = (states == 1).sum()
-#            print(f" unsafe chance :{unsafe_count/n}")
-            #print(f"'unsafe'{most}")
-            if most ==1:
-                true_positives +=1
-
-            if most ==0:
-                false_negatives += 1
-            else:
-#                print(most)
-                if best_cwe and best_cwe == ID:
-                    true_positives +=1
-                else:
-                    false_negatives +=1
-            positive_items += 1
-
-    if not positive_items:
-        return
-    for cwe, sequences in good_data.items():
-        if cwe != ID:
-            continue
-        for seq in sequences:
-            best_cwe,sorted_scores  = classify_sequence(seq,trained_models,feature_map, w2v_model)
-            probs, states = classify2(seq, trained_models,feature_map,cwe,n, w2v_model)
-            if isinstance(states,float):
-                continue
-            #print(states)
-            most = max(set(states), key=states.tolist().count)
-            safe_count = (states ==0).sum()
-#            print(f"safe:{safe_count/n}")
-            if most == 1:
-                false_positives += 1
-            if most ==0:
-                true_negatives += 1
-            else:
-           #     print(most)
-                if best_cwe and best_cwe == ID:
-                    false_positives +=1
-                else:
-                    true_negatives +=1
-            negative_items +=1
-
-    print("Predict and Sample Method")
-    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
 
 
 def identify_unsafe_state(ID, good_data, bad_data, model, vocab, w2v_model):
@@ -935,7 +811,7 @@ def identify_unsafe_state(ID, good_data, bad_data, model, vocab, w2v_model):
     unsafe_state = max(unsafe_ratios, key=unsafe_ratios.get)
     return unsafe_state, unsafe_ratios
 
-def test_with_state_mapping(good_data, bad_data, ID, model, vocab, w2v_model):
+def test_with_state_mapping(good_data, bad_data, ID, model, vocab, w2v_model,states):
     # Step 1: figure out unsafe state for CWE
     unsafe_state, state_ratios = identify_unsafe_state(ID, good_data, bad_data, model, vocab,w2v_model)
     print(f"[DEBUG] CWE-{ID} unsafe state: {unsafe_state}, ratios: {state_ratios}")
@@ -969,99 +845,50 @@ def test_with_state_mapping(good_data, bad_data, ID, model, vocab, w2v_model):
         negative_items += 1
 
     print("Test With State Mapping")
-#    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
+    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items,states)
 
     F1 = calculate_F1(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
     return F1
 
 def calculate_F1(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items):
-    if true_positives+true_negatives == 0:
-        accuracy = 0.0
-    else:
-        accuracy = (true_positives+true_negatives)/(true_negatives+false_positives+false_negatives+true_positives)
-    if true_positives ==0:
-        recall =0.0
-    else:
-        recall = (true_positives)/(true_positives+false_negatives)
-    if true_positives == 0:
-        precision =0.0
-    else:
-        precision = (true_positives) /(true_positives+false_positives)
-    F1 = (2*precision*recall)/max(precision+recall,1)
+    # Accuracy (not actually used in F1, but fine to compute)
+    total = true_positives + true_negatives + false_positives + false_negatives
+    accuracy = (true_positives + true_negatives) / total if total > 0 else 0.0 
+    # Recall
+    recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
+    # Precision
+    precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
+    # F1 score
+    F1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
     return F1
 
-def print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items):
-    print(f"CWE-{ID}:")
-   # print(f"number of positive samples {positive_items}")
+def print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items, states):
+#    print(f"CWE-{ID}:")
 
-    #print(f"number of negatives samples {negative_items}")
-
-    print(f"false positives {false_positives}")
-    print(f"false negatives {false_negatives}")
+#    print(f"false positives {false_positives}")
+#    print(f"false negatives {false_negatives}")
     if true_positives+true_negatives == 0:
         accuracy = 0.0
     else:
         accuracy = (true_positives+true_negatives)/(true_negatives+false_positives+false_negatives+true_positives)
-#    accuracy = (true_positives+true_negatives) / max(positive_items+negative_items,1)
-    print(f"best accuracy {accuracy*100.0}%")
+#    print(f"best accuracy {accuracy*100.0}%")
     if true_positives ==0:
         recall =0.0
     else:
         recall = (true_positives)/(true_positives+false_negatives)
-#    recall = (true_positives ) / max(positive_items, 1)
-#    precision = (true_negatives ) / max(negative_items, 1)
     if true_positives == 0:
         precision =0.0
     else:
         precision = (true_positives) /(true_positives+false_positives)
-    F1 = (2*precision*recall)/max(precision+recall,1)
+    F1 = (2*precision*recall)/(precision+recall) if (precision +recall) >0 else 0.0
     num_examples = positive_items+negative_items
-    print(f"recall {recall*100.0}%, precision {precision*100.0}%")
-    print(f"F1 score: {F1}\n")
-#    print(f"{ID}&{positive_items}&{negative_items}&{num_examples}&{false_positives}&{false_negatives}&{accuracy*100.0:.2f}&{recall*100.0:.2f}&{precision*100.0:.2f}&{F1:.2f}\\\\")
+#    print(f"recall {recall*100.0}%, precision {precision*100.0}%")
+#    print(f"F1 score: {F1}\n")
+    print(f"{ID}&{states}&{positive_items}&{negative_items}&{false_positives}&{false_negatives}&{accuracy*100.0:.2f}&{recall*100.0:.2f}&{precision*100.0:.2f}&{F1:.2f}\\\\")
 
 
-def testing_with_scoring(good_data, bad_data, ID,trained_models,w2v_model):
-    positive_items = 0
-    negative_items = 0
-    num_examples = 0
-    false_positives = 0
-    false_negatives = 0
-    true_positives = 0
-    true_negatives = 0
-    results = []
-    for cwe, sequences in bad_data.items():
-        if cwe != ID:
-            continue
-        for seq in sequences:
-            unsafe_score,safe_score  = classify(seq,trained_models,feature_map, cwe,w2v_model)
-       #     print(f"for the bad code, unsafe score: {score} safe score: {safe_score}")
-            if abs(unsafe_score) < abs(safe_score):
-                true_positives += 1
-            else:
-                false_negatives += 1
-            positive_items += 1
 
-    if not positive_items:
-        return
-    for cwe, sequences in good_data.items():
-        if cwe != ID:
-            continue
-        for seq in sequences:
-
-            unsafe_score,safe_score  = classify(seq,trained_models,feature_map, cwe,w2v_model)
-        #    print(f"for the good code, unsafe score: {score} safe score: {safe_score}")
-            if abs(unsafe_score) < abs(safe_score):
-                false_positives += 1
-            else:
-                true_negatives += 1
-            negative_items +=1
-
-
-    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
-
-
-def test_with_rank(good_data,bad_data, ID, models, w2v_model, thresh):
+def test_with_rank(good_data,bad_data, ID, models, w2v_model, thresh,states):
 
     positive_items = 0
     negative_items = 0
@@ -1108,7 +935,7 @@ def test_with_rank(good_data,bad_data, ID, models, w2v_model, thresh):
         else:
             continue
     print("Rank method:")
-#    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
+    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items,states)
     F1 = calculate_F1(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
     return F1
 
@@ -1130,12 +957,54 @@ def find_best_n_states_f1(train_data,good_data, bad_data, vocab, w2v_model, min_
             model.fit(X, lengths)
 
             # Identify unsafe state
-            F1= test_with_state_mapping(good_data, bad_data, cwe,model,vocab,w2v_model)
+            F1= test_with_state_mapping(good_data, bad_data, cwe,model,vocab,w2v_model, n)
 
             # Validation step
 
             if F1 > best_f1:
                 best_f1 =F1
+                best_n = n
+
+        best_states[cwe] = best_n
+        print(f"CWE-{cwe}: best_n={best_n}, best_f1={best_f1:.3f}")
+
+    return best_states
+
+def find_best_n_states_rank(combined, good_data, bad_data, vocab, w2v_model,
+                            min_states=3, max_states=10, rank_thresh=2):
+    """
+    combined: dict[CWE] -> list of encoded training sequences
+    good_data/bad_data: dict[CWE] -> list of *raw* safe/unsafe sequences for testing
+    vocab: feature_map
+    w2v_model:  trained word2vec model
+    rank_thresh: rank threshold for 'positive' match
+    """
+    best_states = {}
+
+    for cwe in combined.keys():
+        if cwe not in good_data or cwe not in bad_data:
+            continue
+        if len(combined[cwe]) < 2:
+            continue
+
+        # Prepare training data for this CWE
+        lengths, X = massageX(combined[cwe])
+
+        best_f1 = -1
+        best_n = min_states
+
+        for n in range(min_states, max_states + 1):
+            model = hmm.MultinomialHMM(n_components=n, n_iter=100, random_state=42)
+            model.fit(X, lengths)
+
+            # Build model dict so classify_sequence can work
+            models = {cwe: model}
+
+            # Run your rank-based test
+            f1 = test_with_rank(good_data, bad_data, cwe, models, w2v_model, rank_thresh, n)
+
+            if f1 is not None and f1 > best_f1:
+                best_f1 = f1
                 best_n = n
 
         best_states[cwe] = best_n
@@ -1163,12 +1032,14 @@ def raw_tokens(data):
     real_world_bad, unknown_bad = real_world(data,'before')
     #find best states space and train models:
 
-    trained_models_bad = train(combined_bad,5)
+#    trained_models_bad = train(combined_bad,5)
     w2v_model = train_word2vec(mother_of_all_sequences, vector_size=50, min_count=1, window=5)
-
-    find_best_n_states_f1(combined_bad, real_world_good_test, real_world_bad_test,feature_map,w2v_model)
+    best_states_rank = find_best_n_states_rank(combined_bad, real_world_good_test, real_world_bad_test, feature_map, w2v_model)
+    best_n_states_map =  find_best_n_states_f1(combined_bad, real_world_good_test, real_world_bad_test,feature_map,w2v_model)
     print(len(trained_cwes))
     print(len(feature_map))
+    trained_models_rank = train(combined_bad, best_states_rank)
+    trained_models_map = train(combined_bad, best_n_states_map)
 #    print("Confidence Ratios Test data:")
 #    results_test_data  = z_score_confidence(real_world_good_test, real_world_bad_test, trained_models_bad, feature_map,"test",w2v_model)
 #    print("Confidence Ratios Training data:")
@@ -1176,12 +1047,10 @@ def raw_tokens(data):
 #    for cwe, result in results_test_data.items():
 #        print(f"{cwe}&{results_train_data[cwe][0]:.2f}&{result[0]:.2f}&{result[1]:.2f}\\\\")
     graph_hidden_states(combined_bad,trained_models_bad)
-#    for i in trained_cwes:
-#        test_with_state_mapping(real_world_good_test,real_world_bad_test,i,trained_models_bad,feature_map, w2v_model)
-#        test_with_predict(real_world_good_test,real_world_bad_test,i, trained_models_bad, w2v_model)
-#        test_with_rank(real_world_good_test,real_world_bad_test,i,trained_models_bad,w2v_model, 2)
-#        print("-------------------------------------------------------\n")
-
+    for cwe in best_states_rank.keys():
+        test_with_rank(real_world_good_test,real_world_bad_test,cwe, trained_models_rank[cwe], w2v_model,2,best_states_rank[cwe])
+    for cwe in best_n_states_map.keys():
+        test_with_state_mapping(real_world_good_test, real_world_bad_test, cwe, trained_models_map[cwe], w2v_model,best_n_states_map[cwe])
 #    find_unknown(unknown_bad,trained_models_bad)
 
 def find_unknown(unknown,models):
