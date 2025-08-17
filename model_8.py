@@ -509,6 +509,15 @@ def combine(real_world_bad,real_world_good, encoded_cwes):
 
 trained_cwes =[]
 
+def combine_bad(real_world_bad,encoded_cwes):
+    combined = defaultdict(list)
+
+    all_ids = set(encoded_cwes.keys()) | set(real_world_bad.keys())
+
+    for _id in all_ids:
+        combined[_id] =  encoded_cwes[_id]+real_world_bad[_id]
+
+    return combined
 
 def massageX(sequences):
     lengths = [len(seq) for seq in sequences]
@@ -527,6 +536,8 @@ def train(combined, states):
             continue
         if cwe not in trained_cwes:
             trained_cwes.append(cwe)
+        if cwe not in states:
+            continue
         lengths, X = massageX(bad_sequences)
 
 
@@ -779,21 +790,17 @@ def identify_unsafe_state(ID, good_data, bad_data, model, vocab, w2v_model):
     state_counts_safe = Counter()
     state_counts_unsafe = Counter()
     for sequence in good_data.get(ID, []):
-        encoded = encode_with_w2v(sequence, feature_map,w2v_model, OUT_OF_VOCAB_ID)
-        if not encoded:
-            continue
-        X = np.array(encoded).reshape(-1, 1)
-        states = model.predict(X)
-        state_counts_safe.update(states)
+        X= np.array(sequence).reshape(-1,1)
+        states = model[ID].predict(X)
+        final_states = states[-2:]
+        state_counts_unsafe.update(final_states)
 
     for sequence in bad_data.get(ID,[]):
-        encoded = encode_with_w2v(sequence, feature_map, w2v_model, OUT_OF_VOCAB_ID)
-        if not encoded:
-            continue
 
-        X = np.array(encoded).reshape(-1, 1)
-        states = model.predict(X)
-        state_counts_unsafe.update(states)
+        X = np.array(sequence).reshape(-1,1)
+        states = model[ID].predict(X)
+        final_states = states[-2:]
+        state_counts_unsafe.update(final_states)
 
     unsafe_ratios ={}
     for s in set(state_counts_safe.keys()) | set(state_counts_unsafe.keys()):
@@ -811,19 +818,22 @@ def identify_unsafe_state(ID, good_data, bad_data, model, vocab, w2v_model):
     unsafe_state = max(unsafe_ratios, key=unsafe_ratios.get)
     return unsafe_state, unsafe_ratios
 
-def test_with_state_mapping(good_data, bad_data, ID, model, vocab, w2v_model,states):
+def test_with_state_mapping(good_data_train, bad_data_train,good_data_test,bad_data_test, ID, model, vocab, w2v_model,state_space):
     # Step 1: figure out unsafe state for CWE
-    unsafe_state, state_ratios = identify_unsafe_state(ID, good_data, bad_data, model, vocab,w2v_model)
-    print(f"[DEBUG] CWE-{ID} unsafe state: {unsafe_state}, ratios: {state_ratios}")
+    unsafe_state, state_ratios = identify_unsafe_state(ID, good_data_train, bad_data_train, model, vocab,w2v_model)
+#    print(f"[DEBUG] CWE-{ID} unsafe state: {unsafe_state}, ratios: {state_ratios}")
     positive_items = negative_items = 0
     false_positives = false_negatives = true_positives = true_negatives = 0
 
-    for sequence in bad_data.get(ID,[]):
+    for sequence in bad_data_test.get(ID,[]):
         encoded = encode_with_w2v(sequence, vocab, w2v_model, OUT_OF_VOCAB_ID)
         if not encoded:
             continue
         X = np.array(encoded).reshape(-1, 1)
-        states = model.predict(X)
+        states = model[ID].predict(X)
+        final_state = states[-1]
+        model[ID].n_trials = len(encoded)
+        probs, states = model[ID].sample(100, random_state=None, currstate=final_state)
         most_common = Counter(states).most_common(1)[0][0]
         if most_common == unsafe_state:
             true_positives += 1
@@ -831,12 +841,15 @@ def test_with_state_mapping(good_data, bad_data, ID, model, vocab, w2v_model,sta
             false_negatives += 1
         positive_items += 1
 
-    for sequence in good_data.get(ID,[]):
+    for sequence in good_data_test.get(ID,[]):
         encoded = encode_with_w2v(sequence, vocab, w2v_model, OUT_OF_VOCAB_ID)
         if not encoded:
             continue
         X = np.array(encoded).reshape(-1, 1)
-        states = model.predict(X)
+        states = model[ID].predict(X)
+        final_state = states[-1]
+        model[ID].n_trials = len(encoded)
+        probs, states = model[ID].sample(100, random_state=None, currstate=final_state)
         most_common = Counter(states).most_common(1)[0][0]
         if most_common == unsafe_state:
             false_positives += 1
@@ -845,7 +858,7 @@ def test_with_state_mapping(good_data, bad_data, ID, model, vocab, w2v_model,sta
         negative_items += 1
 
     print("Test With State Mapping")
-    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items,states)
+    print_results(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items,state_space)
 
     F1 = calculate_F1(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
     return F1
@@ -884,7 +897,7 @@ def print_results(ID,false_positives, false_negatives, true_positives, true_nega
     num_examples = positive_items+negative_items
 #    print(f"recall {recall*100.0}%, precision {precision*100.0}%")
 #    print(f"F1 score: {F1}\n")
-    print(f"{ID}&{states}&{positive_items}&{negative_items}&{false_positives}&{false_negatives}&{accuracy*100.0:.2f}&{recall*100.0:.2f}&{precision*100.0:.2f}&{F1:.2f}\\\\")
+    print(f"{ID}&{states}&{num_examples}&{false_positives}&{false_negatives}&{accuracy*100.0:.2f}&{recall*100.0:.2f}&{precision*100.0:.2f}&{F1:.2f}\\\\")
 
 
 
@@ -939,25 +952,24 @@ def test_with_rank(good_data,bad_data, ID, models, w2v_model, thresh,states):
     F1 = calculate_F1(ID,false_positives, false_negatives, true_positives, true_negatives, positive_items, negative_items)
     return F1
 
-def find_best_n_states_f1(train_data,good_data, bad_data, vocab, w2v_model, min_states=2, max_states=10, n_samples=1000):
-    best_states = {}
+def find_best_n_states_f1(combined_encoded,good_data_train,bad_data_train,good_data_test, bad_data_test, vocab, w2v_model, min_states=3, max_states=10, n_samples=1000):
+    models_by_n = {}
+    for n in range(min_states, max_states + 1):
+        models_by_n[n] = build_models_for_n(combined_encoded, n, random_state=42, n_iter=100)
 
-    for cwe, sequences in train_data.items():
-
-        if len(sequences) <2:
+    best_n_per_cwe = {}
+    for target_cwe in combined_encoded.keys():
+        if target_cwe not in good_data_test or target_cwe not in bad_data_test:
             continue
-        lengths, X = massageX(sequences)
 
-        best_f1 = -1
+        best_f1 = -1.0
         best_n = min_states
-
-        for n in range(min_states, max_states + 1):
-            model = hmm.MultinomialHMM(n_components=n, n_iter=100, random_state=42)
-
-            model.fit(X, lengths)
+        for n, models in models_by_n.items():
+            if target_cwe not in models:  # no model for this CWE at this n (e.g., too little data)
+                continue
 
             # Identify unsafe state
-            F1= test_with_state_mapping(good_data, bad_data, cwe,model,vocab,w2v_model, n)
+            F1= test_with_state_mapping(good_data_train, bad_data_train,good_data_test,bad_data_test, target_cwe,models,vocab,w2v_model, n)
 
             # Validation step
 
@@ -965,52 +977,65 @@ def find_best_n_states_f1(train_data,good_data, bad_data, vocab, w2v_model, min_
                 best_f1 =F1
                 best_n = n
 
-        best_states[cwe] = best_n
-        print(f"CWE-{cwe}: best_n={best_n}, best_f1={best_f1:.3f}")
+        best_n_per_cwe[target_cwe] = best_n
+        print(f"CWE-{target_cwe}: best_n={best_n}, F1={best_f1:.3f})")
 
-    return best_states
+    return best_n_per_cwe
 
-def find_best_n_states_rank(combined, good_data, bad_data, vocab, w2v_model,
-                            min_states=3, max_states=10, rank_thresh=2):
+def build_models_for_n(combined_encoded, n_components, random_state=42, n_iter=100):
     """
-    combined: dict[CWE] -> list of encoded training sequences
-    good_data/bad_data: dict[CWE] -> list of *raw* safe/unsafe sequences for testing
-    vocab: feature_map
-    w2v_model:  trained word2vec model
-    rank_thresh: rank threshold for 'positive' match
+    Train one MultinomialHMM per CWE using the same n_components.
+    combined_encoded: dict[CWE] -> list[list[int]] (already encoded)
+    Returns: dict[CWE] -> trained hmm.MultinomialHMM
     """
-    best_states = {}
-
-    for cwe in combined.keys():
-        if cwe not in good_data or cwe not in bad_data:
+    models = {}
+    for cwe, seqs in combined_encoded.items():
+        if not seqs or len(seqs) < 1:
             continue
-        if len(combined[cwe]) < 2:
+        lengths, X = massageX(seqs)  # keeps your EOS padding scheme
+        if len(lengths) < 1 or X.size == 0:
             continue
 
-        # Prepare training data for this CWE
-        lengths, X = massageX(combined[cwe])
+        model = hmm.MultinomialHMM(n_components=n_components, n_iter=n_iter, random_state=random_state)
+        # Let hmmlearn infer n_features from data (safer with padding/EOS)
+        model.fit(X, lengths)
+        models[cwe] = model
+    return models
 
-        best_f1 = -1
+def find_best_n_states_rank(combined_encoded, good_data, bad_data, vocab, w2v_model, OUT_OF_VOCAB_ID,
+                            min_states=2, max_states=10, rank_thresh=2, random_state=42, n_iter=100):
+    """
+    For each n in [min_states, max_states], train a model for EVERY CWE (same n),
+    then evaluate rank-based F1 for each target CWE against the set of all models.
+    Pick the n with the highest F1 per CWE.
+    """
+    # Pre-train a full model set per n so ranking is meaningful
+    models_by_n = {}
+    for n in range(min_states, max_states + 1):
+        models_by_n[n] = build_models_for_n(combined_encoded, n, random_state=random_state, n_iter=n_iter)
+
+    best_n_per_cwe = {}
+    for target_cwe in combined_encoded.keys():
+        if target_cwe not in good_data or target_cwe not in bad_data:
+            continue
+
+        best_f1 = -1.0
         best_n = min_states
+        for n, models in models_by_n.items():
+            if target_cwe not in models:  # no model for this CWE at this n (e.g., too little data)
+                continue
+            f1 = test_with_rank(
+                good_data, bad_data, target_cwe, models,  w2v_model, rank_thresh,n)
 
-        for n in range(min_states, max_states + 1):
-            model = hmm.MultinomialHMM(n_components=n, n_iter=100, random_state=42)
-            model.fit(X, lengths)
-
-            # Build model dict so classify_sequence can work
-            models = {cwe: model}
-
-            # Run your rank-based test
-            f1 = test_with_rank(good_data, bad_data, cwe, models, w2v_model, rank_thresh, n)
-
-            if f1 is not None and f1 > best_f1:
+            # print(f"[DEBUG] CWE-{target_cwe}, n={n}, F1={f1:.3f}, tp={tp}, fp={fp}, tn={tn}, fn={fn}")
+            if f1 > best_f1:
                 best_f1 = f1
                 best_n = n
 
-        best_states[cwe] = best_n
-        print(f"CWE-{cwe}: best_n={best_n}, best_f1={best_f1:.3f}")
+        best_n_per_cwe[target_cwe] = best_n
+        print(f"CWE-{target_cwe}: best_n={best_n} (rank@{rank_thresh}, F1={best_f1:.3f})")
 
-    return best_states
+    return best_n_per_cwe
 
 def raw_tokens(data):
 
@@ -1028,29 +1053,31 @@ def raw_tokens(data):
     #encode he training data
     encoded_real_world_good_train = encode(real_world_good_train, SAFE_ID)
     encoded_real_world_bad_train = encode(real_world_bad_train, UNSAFE_ID)
-    combined_bad = combine(encoded_real_world_bad_train,encoded_real_world_good_train, encoded_cwe_bad)
+    combined = combine(encoded_real_world_bad_train,encoded_real_world_good_train, encoded_cwe_bad)
+    combined_bad = combine_bad(encoded_real_world_bad_train, encoded_cwe_bad)
     real_world_bad, unknown_bad = real_world(data,'before')
     #find best states space and train models:
 
 #    trained_models_bad = train(combined_bad,5)
     w2v_model = train_word2vec(mother_of_all_sequences, vector_size=50, min_count=1, window=5)
-    best_states_rank = find_best_n_states_rank(combined_bad, real_world_good_test, real_world_bad_test, feature_map, w2v_model)
-    best_n_states_map =  find_best_n_states_f1(combined_bad, real_world_good_test, real_world_bad_test,feature_map,w2v_model)
+#    best_states_rank = find_best_n_states_rank(combined, real_world_good_test, real_world_bad_test, feature_map, w2v_model, OUT_OF_VOCAB_ID, min_states =3)
+    best_n_states_map =  find_best_n_states_f1(combined,encoded_real_world_good_train, combined_bad, real_world_good_test,real_world_bad_test,feature_map,w2v_model)
     print(len(trained_cwes))
     print(len(feature_map))
-    trained_models_rank = train(combined_bad, best_states_rank)
-    trained_models_map = train(combined_bad, best_n_states_map)
+#    trained_models_rank = train(combined_bad, 3)
+    print(best_n_states_map)
+    trained_models_map = train(combined, best_n_states_map)
 #    print("Confidence Ratios Test data:")
 #    results_test_data  = z_score_confidence(real_world_good_test, real_world_bad_test, trained_models_bad, feature_map,"test",w2v_model)
 #    print("Confidence Ratios Training data:")
 #    results_train_data = z_score_confidence(encoded_real_world_good_train, encoded_real_world_bad_train, trained_models_bad, feature_map,"train", w2v_model)
 #    for cwe, result in results_test_data.items():
 #        print(f"{cwe}&{results_train_data[cwe][0]:.2f}&{result[0]:.2f}&{result[1]:.2f}\\\\")
-    graph_hidden_states(combined_bad,trained_models_bad)
-    for cwe in best_states_rank.keys():
-        test_with_rank(real_world_good_test,real_world_bad_test,cwe, trained_models_rank[cwe], w2v_model,2,best_states_rank[cwe])
+#    graph_hidden_states(combined_bad,trained_models_bad)
     for cwe in best_n_states_map.keys():
-        test_with_state_mapping(real_world_good_test, real_world_bad_test, cwe, trained_models_map[cwe], w2v_model,best_n_states_map[cwe])
+        test_with_state_mapping(encoded_real_world_good_train,encoded_real_world_bad_train,real_world_good_test,real_world_bad_test,cwe, trained_models_map,feature_map, w2v_model,best_n_states_map[cwe])
+#    for cwe in best_n_states_map.keys():
+#        test_with_state_mapping(real_world_good_test, real_world_bad_test, cwe, trained_models_map[cwe], w2v_model,best_n_states_map[cwe])
 #    find_unknown(unknown_bad,trained_models_bad)
 
 def find_unknown(unknown,models):
